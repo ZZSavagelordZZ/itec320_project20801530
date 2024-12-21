@@ -192,6 +192,7 @@ body {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 1.5rem;
+    margin-top: 1rem;
 }
 
 .action-card {
@@ -204,11 +205,14 @@ body {
     gap: 1rem;
     text-decoration: none;
     color: inherit;
-    transition: transform 0.2s;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
 }
 
 .action-card:hover {
     transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    border-color: #28a745;
     text-decoration: none;
     color: inherit;
 }
@@ -221,11 +225,15 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: all 0.2s ease;
 }
 
-.action-icon i {
-    font-size: 24px;
-    color: #28a745;
+.action-card:hover .action-icon {
+    background: #28a745;
+}
+
+.action-card:hover .action-icon i {
+    color: white !important;
 }
 
 .action-content h3 {
@@ -276,6 +284,7 @@ body {
     overflow: hidden;
 }
 
+/* Month View */
 .calendar-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
@@ -313,43 +322,7 @@ body {
     color: #adb5bd;
 }
 
-.appointment-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    margin: 2px;
-    display: inline-block;
-}
-
-.appointment-active {
-    background-color: #28a745;
-}
-
-.appointment-cancelled {
-    background-color: #ffc107;
-}
-
-.appointment-preview {
-    font-size: 0.75rem;
-    margin: 2px 0;
-    padding: 2px 4px;
-    border-radius: 3px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.appointment-preview.active {
-    background-color: rgba(40, 167, 69, 0.1);
-    color: #28a745;
-}
-
-.appointment-preview.cancelled {
-    background-color: rgba(255, 193, 7, 0.1);
-    color: #856404;
-}
-
-/* Week View Styles */
+/* Week View */
 .week-view {
     display: grid;
     grid-template-columns: 60px repeat(7, 1fr);
@@ -366,22 +339,7 @@ body {
     color: #2d3436;
 }
 
-.time-label {
-    padding: 0.5rem;
-    color: #6c757d;
-    font-size: 0.875rem;
-    text-align: right;
-    background: white;
-    border-right: 1px solid #e9ecef;
-}
-
-.appointment-slot {
-    padding: 0.25rem;
-    background: white;
-    min-height: 40px;
-}
-
-/* Day View Styles */
+/* Day View */
 .day-schedule {
     display: flex;
     flex-direction: column;
@@ -397,153 +355,104 @@ body {
     background: white;
 }
 
+.time-slot .time-label {
+    border-right: 1px solid #e9ecef;
+}
+
 .time-slot .appointment-preview {
     margin: 0.25rem;
     padding: 0.5rem;
-}
-
-/* Common Calendar Styles */
-.appointments-container {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-    margin-top: 0.5rem;
-}
-
-.appointment-preview {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.75rem;
-    padding: 0.25rem 0.5rem;
-    border-radius: 3px;
     background: rgba(255, 255, 255, 0.9);
 }
 
-.appointment-preview.active {
-    border-left: 3px solid #28a745;
+/* Common Time Slots */
+.time-label {
+    background: #f8f9fa;
+    padding: 0.5rem;
+    text-align: right;
+    color: #6c757d;
+    font-size: 0.875rem;
 }
 
-.appointment-preview.cancelled {
-    border-left: 3px solid #ffc107;
+.time-slot,
+.appointment-slot {
+    background: white;
+    min-height: 40px;
+    padding: 0.25rem;
 }
 
-.appointment-preview span {
+/* Appointment Styles */
+.appointment-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin: 2px;
+    display: inline-block;
+}
+
+.appointment-active { background-color: #28a745; }
+.appointment-cancelled { background-color: #ffc107; }
+
+.appointment-preview {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    margin: 2px 0;
+    border-radius: 3px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
+.appointment-preview.active {
+    background-color: rgba(40, 167, 69, 0.1);
+    color: #28a745;
+}
+
+.appointment-preview.cancelled {
+    background-color: rgba(255, 193, 7, 0.1);
+    color: #856404;
+}
+
 /* Calendar Controls */
-.calendar-controls .btn {
-    padding: 0.5rem 1rem;
-    border: 1px solid #e9ecef;
-    background: white;
-    color: #6c757d;
-    font-weight: 500;
-    transition: all 0.2s;
-    border-radius: 4px;
-}
-
-.calendar-controls .btn i {
+.calendar-controls .btn,
+.calendar-navigation .btn {
+    padding: 0.5rem 1rem !important;
+    border: 1px solid #e9ecef !important;
+    background: white !important;
     color: #6c757d !important;
-    transition: all 0.2s;
+    font-weight: 500 !important;
+    transition: all 0.2s !important;
+    border-radius: 4px !important;
 }
 
-.calendar-controls .btn:hover {
-    background-color: #28a745;
-    color: white;
-    border-color: #28a745;
+.calendar-controls .btn i,
+.calendar-navigation .btn i {
+    color: #6c757d !important;
+    transition: all 0.2s !important;
 }
 
-.calendar-controls .btn:hover i {
+.calendar-controls .btn:hover,
+.calendar-navigation .btn:hover {
+    background-color: #28a745 !important;
+    color: white !important;
+    border-color: #28a745 !important;
+}
+
+.calendar-controls .btn:hover i,
+.calendar-navigation .btn:hover i {
     color: white !important;
 }
 
+.calendar-controls .btn.active,
 .calendar-controls .btn.btn-primary {
     background-color: #28a745 !important;
     color: white !important;
     border-color: #28a745 !important;
 }
 
+.calendar-controls .btn.active i,
 .calendar-controls .btn.btn-primary i {
     color: white !important;
-}
-
-/* Calendar Navigation Styles */
-.calendar-navigation .btn {
-    padding: 0.5rem;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    background: white;
-    border: 1px solid #e9ecef;
-    color: #6c757d;
-    transition: all 0.2s;
-}
-
-.calendar-navigation .btn i {
-    color: #6c757d !important;
-    transition: all 0.2s;
-}
-
-.calendar-navigation .btn:hover {
-    background-color: #28a745;
-    color: white;
-    border-color: #28a745;
-}
-
-.calendar-navigation .btn:hover i {
-    color: white !important;
-}
-
-/* Responsive Calendar */
-@media (max-width: 768px) {
-    .calendar-header {
-        flex-direction: column;
-        gap: 1rem;
-    }
-
-    .calendar-controls {
-        width: 100%;
-        justify-content: center;
-    }
-
-    .week-view {
-        grid-template-columns: 50px repeat(7, 1fr);
-    }
-
-    .week-time-row {
-        grid-template-columns: 50px repeat(7, 1fr);
-    }
-
-    .time-label {
-        font-size: 0.75rem;
-        padding: 0.25rem;
-    }
-
-    .appointment-preview span {
-        font-size: 0.7rem;
-    }
-}
-
-/* Keep sidebar icons white */
-.sidebar .fas, 
-.sidebar .far, 
-.sidebar .fab, 
-.sidebar .fa {
-    color: white !important;
-}
-
-/* Keep action card icons green */
-.action-icon .fas,
-.action-icon .far,
-.action-icon .fab,
-.action-icon .fa {
-    color: #28a745 !important;
 }
 
 /* Table Styles */
@@ -571,6 +480,40 @@ body {
     vertical-align: middle;
 }
 
+/* Actions Column */
+.actions-column {
+    width: 200px;
+    text-align: right !important;
+    white-space: nowrap;
+}
+
+.actions-column .btn {
+    margin-left: 0.5rem;
+}
+
+.actions-column .btn:first-child {
+    margin-left: 0;
+}
+
+/* Button colors */
+.btn-delete {
+    background-color: #dc3545 !important;
+    color: white !important;
+}
+
+.btn-delete:hover {
+    background-color: #c82333 !important;
+}
+
+.btn-cancel {
+    background-color: #ffc107 !important;
+    color: #212529 !important;
+}
+
+.btn-cancel:hover {
+    background-color: #e0a800 !important;
+}
+
 /* Global button styles */
 .btn {
     display: inline-flex !important;
@@ -586,13 +529,18 @@ body {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
 }
 
-.btn-primary {
-    background-color: #2e7d32 !important;
+/* Form Save Button */
+form:not(.user-menu form) button[type="submit"]:not(.btn-cancel):not(.btn-delete),
+form:not(.user-menu form) input[type="submit"]:not(.btn-cancel):not(.btn-delete) {
+    background-color: #28a745 !important;
+    border-color: #28a745 !important;
     color: white !important;
 }
 
-.btn-primary:hover {
-    background-color: #1b5e20 !important;
+form:not(.user-menu form) button[type="submit"]:not(.btn-cancel):not(.btn-delete):hover,
+form:not(.user-menu form) input[type="submit"]:not(.btn-cancel):not(.btn-delete):hover {
+    background-color: #218838 !important;
+    border-color: #1e7e34 !important;
 }
 
 /* Responsive Design */
@@ -614,187 +562,19 @@ body {
     .user-menu {
         padding: 1rem 0.5rem;
     }
-} 
 
-/* Calendar Section Layout */
-.calendar-section {
-    display: none;
+    .calendar-header {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .calendar-controls {
+        width: 100%;
+        justify-content: center;
+    }
 }
 
-.calendar-section::after {
-    display: none;
-}
-
-.calendar-wrapper {
-    display: none;
-}
-
-.todays-appointments {
-    width: 100%;
-    padding: 0;
-}
-
-.todays-appointments h2 {
-    margin-bottom: 1.5rem;
-}
-
-.appointment-item {
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    padding: 1rem;
-    border-left: 3px solid #28a745;
-    transition: transform 0.2s ease;
-}
-
-.appointment-item:hover {
-    transform: translateY(-2px);
-}
-
-.appointment-item.appointment-cancelled {
-    border-left-color: #dc3545;
-    opacity: 0.8;
-}
-
-.appointment-time {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #2d3436;
-    margin-bottom: 0.75rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.appointment-time i {
-    color: #28a745 !important;
-    font-size: 0.9rem;
-}
-
-.appointment-details {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-.appointment-details h4 {
-    margin: 0;
-    font-size: 0.9rem;
-    color: #2d3436;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.appointment-details h4 i {
-    color: #28a745 !important;
-    font-size: 0.8rem;
-}
-
-.appointment-details p {
-    margin: 0;
-    font-size: 0.8rem;
-    color: #6c757d;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.appointment-details p i {
-    color: #28a745 !important;
-    font-size: 0.8rem;
-}
-
-.appointment-status {
-    margin-top: 0.5rem;
-}
-
-.status-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.25rem;
-    padding: 0.25rem 0.5rem;
-    border-radius: 4px;
-    font-size: 0.75rem;
-    font-weight: 500;
-}
-
-.status-badge i {
-    font-size: 0.8rem;
-}
-
-.status-active {
-    background-color: rgba(40, 167, 69, 0.1);
-    color: #28a745;
-}
-
-.status-active i {
-    color: #28a745 !important;
-}
-
-.status-cancelled {
-    background-color: rgba(220, 53, 69, 0.1);
-    color: #dc3545;
-}
-
-.status-cancelled i {
-    color: #dc3545 !important;
-}
-
-.no-appointments {
-    text-align: center;
-    padding: 2rem;
-    background: #f8f9fa;
-    border-radius: 8px;
-    color: #6c757d;
-}
-
-.no-appointments i {
-    font-size: 2rem;
-    margin-bottom: 1rem;
-    color: #6c757d !important;
-}
-
-.no-appointments p {
-    margin: 0;
-    font-size: 0.9rem;
-}
-
-/* Calendar and Appointments Layout */
-.calendar-appointments-container {
-    display: flex;
-    gap: 2rem;
-}
-
-.calendar-side {
-    flex: 1;
-    min-width: 0; /* Prevents flex item from overflowing */
-}
-
-.appointments-side {
-    width: 300px;
-    flex-shrink: 0;
-    border-left: 3px solid rgba(52, 58, 64, 0.15);
-    padding-left: 2rem;
-}
-
-.todays-appointments-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    max-height: 600px;
-    overflow-y: auto;
-} 
-
-/* Make dashboard icons green */
-.dashboard-container .fas:not(.btn .fas), 
-.dashboard-container .far:not(.btn .fas), 
-.dashboard-container .fab:not(.btn .fas), 
-.dashboard-container .fa:not(.btn .fas) {
-    color: #28a745 !important;
-}
-
-/* Keep sidebar icons white */
+/* Icon Colors */
 .sidebar .fas, 
 .sidebar .far, 
 .sidebar .fab, 
@@ -802,7 +582,6 @@ body {
     color: white !important;
 }
 
-/* Keep action card icons green */
 .action-icon .fas,
 .action-icon .far,
 .action-icon .fab,
@@ -810,7 +589,6 @@ body {
     color: #28a745 !important;
 }
 
-/* Button icons default color */
 .btn .fas,
 .btn .far,
 .btn .fab,
@@ -831,13 +609,235 @@ body {
     color: white !important;
 }
 
-/* Dashboard button icons */
-.dashboard-container .calendar-controls .btn:hover i,
-.dashboard-container .calendar-navigation .btn:hover i {
-    color: white !important;
+/* Detail Views */
+.detail-container {
+    padding: 1.5rem;
 }
 
-.dashboard-container .calendar-controls .btn.btn-primary i {
-    color: white !important;
+.detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.detail-header h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #2d3436;
+}
+
+.detail-header .actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.detail-section {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 1.5rem;
+}
+
+.detail-section h2 {
+    margin: 0 0 1.5rem;
+    color: #2d3436;
+    font-size: 1.25rem;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.info-item {
+    margin-bottom: 1rem;
+}
+
+.info-item label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #6c757d;
+    font-size: 0.875rem;
+}
+
+.info-item span,
+.info-item p {
+    color: #2d3436;
+    margin: 0;
+}
+
+.info-item.full-width {
+    grid-column: 1 / -1;
+}
+
+/* Examination Card */
+.examination-card {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.examination-card h3 {
+    margin: 0 0 1rem;
+    font-size: 1.1rem;
+    color: #2d3436;
+}
+
+.examination-card .exam-details {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.examination-card .prescriptions {
+    margin-top: 1rem;
+}
+
+.examination-card .prescriptions h4 {
+    margin: 0 0 1rem;
+    font-size: 1rem;
+    color: #2d3436;
+}
+
+.examination-card .prescription {
+    background: white;
+    border-radius: 6px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.examination-card .prescription p {
+    margin: 0.25rem 0;
+    font-size: 0.875rem;
+}
+
+/* Calendar and Today's Appointments Container */
+.calendar-appointments-container {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.calendar-side {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.appointments-side {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+/* Today's Appointments Styling */
+.todays-appointments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.appointment-item {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border-left: 4px solid #28a745;
+    transition: all 0.2s ease;
+}
+
+.appointment-item:hover {
+    transform: translateX(4px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.appointment-item.appointment-cancelled {
+    border-left-color: #ffc107;
+    background: #fff8e1;
+}
+
+.appointment-time {
+    min-width: 80px;
+    color: #6c757d;
+    font-weight: 500;
+}
+
+.appointment-time i {
+    margin-right: 0.5rem;
+    color: #28a745;
+}
+
+.appointment-details {
+    flex: 1;
+}
+
+.appointment-details h4 {
+    margin: 0 0 0.5rem;
+    font-size: 1rem;
+    color: #2d3436;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.appointment-details p {
+    margin: 0;
+    color: #6c757d;
+    font-size: 0.875rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.appointment-status {
+    margin-top: 0.5rem;
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.status-active {
+    background: rgba(40, 167, 69, 0.1);
+    color: #28a745;
+}
+
+.status-cancelled {
+    background: rgba(255, 193, 7, 0.1);
+    color: #856404;
+}
+
+.no-appointments {
+    text-align: center;
+    padding: 2rem;
+    color: #6c757d;
+}
+
+.no-appointments i {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: #dee2e6;
+}
+
+.no-appointments p {
+    margin: 0;
+    font-size: 0.875rem;
 }
  

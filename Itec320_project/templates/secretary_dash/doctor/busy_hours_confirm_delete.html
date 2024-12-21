@@ -1,0 +1,64 @@
+{% extends 'secretary_dash/common/table_base.html' %}
+
+{% block page_title %}Delete Busy Hours{% endblock %}
+
+{% block table_content %}
+<div class="confirm-delete">
+    <h3>Are you sure you want to delete these busy hours?</h3>
+    <p>This action cannot be undone.</p>
+    
+    <div class="busy-hours-details">
+        <p><strong>Date:</strong> {{ busy_hours.date }}</p>
+        <p><strong>Time:</strong> {{ busy_hours.start_time }} - {{ busy_hours.end_time }}</p>
+        {% if busy_hours.reason %}
+            <p><strong>Reason:</strong> {{ busy_hours.reason }}</p>
+        {% endif %}
+    </div>
+
+    <div class="action-buttons">
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-delete">
+                <i class="fas fa-trash-alt"></i>
+                <span>Delete</span>
+            </button>
+            <a href="{% url 'secretary_dash:busy_hours_list' %}" class="btn btn-cancel">
+                <i class="fas fa-times"></i>
+                <span>Cancel</span>
+            </a>
+        </form>
+    </div>
+</div>
+
+<style>
+    .confirm-delete {
+        text-align: center;
+        padding: 2rem;
+    }
+
+    .confirm-delete h3 {
+        color: #d32f2f;
+        margin-bottom: 1rem;
+    }
+
+    .busy-hours-details {
+        background-color: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 8px;
+        margin: 1.5rem 0;
+        text-align: left;
+    }
+
+    .busy-hours-details p {
+        margin: 0.5rem 0;
+    }
+
+    .action-buttons {
+        margin-top: 2rem;
+    }
+
+    .action-buttons .btn {
+        margin: 0 0.5rem;
+    }
+</style>
+{% endblock %} 

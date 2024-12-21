@@ -3,14 +3,15 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.contrib.auth import logout, authenticate, login
 from django.forms import inlineformset_factory
-from .models import Patient, Appointment, Secretary, Medicine, Examination, Prescription
+from .models import Patient, Appointment, Secretary, Medicine, Examination, Prescription, BusyHours
 from .forms import (
     PatientForm, AppointmentForm, MedicineForm, 
-    ExaminationForm, SecretaryCreationForm, PrescriptionForm
+    ExaminationForm, SecretaryCreationForm, PrescriptionForm, BusyHoursForm
 )
 from datetime import datetime, timedelta
 from django.utils import timezone
 from django.db.models import Count
+import json
 
 def is_secretary(user):
     return Secretary.objects.filter(user=user).exists()
@@ -189,6 +190,18 @@ def appointment_cancel(request, pk):
         messages.success(request, 'Appointment cancelled successfully!')
     return redirect('secretary_dash:appointment_list')
 
+@login_required
+@user_passes_test(lambda u: u.is_superuser or is_secretary(u))
+def appointment_delete(request, pk):
+    if request.method == 'POST':
+        appointment = get_object_or_404(Appointment, pk=pk)
+        if appointment.is_cancelled:  # Only allow deletion of cancelled appointments
+            appointment.delete()
+            messages.success(request, 'Appointment deleted successfully!')
+        else:
+            messages.error(request, 'Only cancelled appointments can be deleted.')
+    return redirect('secretary_dash:appointment_list')
+
 # Secretary-specific views
 @login_required
 @user_passes_test(is_secretary)
@@ -257,13 +270,15 @@ def secretary_create(request):
     if request.method == 'POST':
         form = SecretaryCreationForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            Secretary.objects.create(user=user, phone=form.cleaned_data.get('phone'))
+            form.save()
             messages.success(request, 'Secretary created successfully!')
             return redirect('secretary_dash:secretary_list')
     else:
         form = SecretaryCreationForm()
-    return render(request, 'secretary_dash/doctor/secretary_form.html', {'form': form, 'title': 'Add New Secretary'})
+    return render(request, 'secretary_dash/doctor/secretary_form.html', {
+        'form': form,
+        'title': 'Add New Secretary'
+    })
 
 @login_required
 @user_passes_test(is_doctor)
@@ -277,13 +292,15 @@ def secretary_edit(request, pk):
         form = SecretaryCreationForm(request.POST, instance=secretary.user)
         if form.is_valid():
             form.save()
-            secretary.phone = form.cleaned_data.get('phone')
-            secretary.save()
             messages.success(request, 'Secretary updated successfully!')
             return redirect('secretary_dash:secretary_list')
     else:
-        form = SecretaryCreationForm(instance=secretary.user, initial={'phone': secretary.phone})
-    return render(request, 'secretary_dash/doctor/secretary_form.html', {'form': form, 'title': 'Edit Secretary'})
+        form = SecretaryCreationForm(instance=secretary.user)
+    
+    return render(request, 'secretary_dash/doctor/secretary_form.html', {
+        'form': form,
+        'title': 'Edit Secretary'
+    })
 
 @login_required
 @user_passes_test(is_doctor)
@@ -308,25 +325,7 @@ def secretary_delete(request, pk):
 @login_required
 @user_passes_test(is_doctor)
 def doctor_dashboard(request):
-    """
-    View for the doctor's dashboard.
-    """
-    # Get today's date and end of week
-    today = timezone.localdate()
-    week_end = today + timedelta(days=6)
-    
-    # Get upcoming appointments for the week
-    upcoming_appointments = Appointment.objects.filter(
-        date__gte=today,
-        date__lte=week_end,
-        is_cancelled=False
-    ).order_by('date', 'time')
-    
-    # Get today's appointments
-    today_appointments = Appointment.objects.filter(
-        date=today,
-        is_cancelled=False
-    ).order_by('time')
+    today = timezone.now().date()
     
     # Get statistics
     total_patients = Patient.objects.count()
@@ -334,36 +333,42 @@ def doctor_dashboard(request):
     total_examinations = Examination.objects.count()
     total_medicines = Medicine.objects.count()
     
-    # Get all appointments for the current month
-    current_month = today.month
-    current_year = today.year
-    month_appointments = Appointment.objects.filter(
-        date__year=current_year,
-        date__month=current_month
-    ).values('id', 'date', 'time', 'patient__name', 'is_cancelled')
+    # Get today's appointments
+    today_appointments = Appointment.objects.filter(
+        date=today
+    ).order_by('time')
     
-    # Format appointments for the calendar
+    # Get calendar appointments
     calendar_appointments = []
-    for appointment in month_appointments:
+    appointments = Appointment.objects.all()
+    for appointment in appointments:
         calendar_appointments.append({
-            'id': appointment['id'],
-            'date': appointment['date'].strftime('%Y-%m-%d'),
-            'time': appointment['time'].strftime('%H:%M'),
-            'patient': appointment['patient__name'],
-            'status': 'cancelled' if appointment['is_cancelled'] else 'active'
+            'date': appointment.date.isoformat(),
+            'time': appointment.time.strftime('%H:%M'),
+            'patient': appointment.patient.name,
+            'status': 'cancelled' if appointment.is_cancelled else 'active'
         })
     
-    context = {
+    # Get busy hours
+    busy_hours = []
+    busy_periods = BusyHours.objects.all()
+    for busy in busy_periods:
+        busy_hours.append({
+            'date': busy.date.isoformat(),
+            'start_time': busy.start_time.strftime('%H:%M'),
+            'end_time': busy.end_time.strftime('%H:%M'),
+            'reason': busy.reason
+        })
+    
+    return render(request, 'secretary_dash/doctor/dashboard.html', {
         'total_patients': total_patients,
         'total_appointments': total_appointments,
         'total_examinations': total_examinations,
         'total_medicines': total_medicines,
         'today_appointments': today_appointments,
-        'upcoming_appointments': upcoming_appointments,
-        'calendar_appointments': calendar_appointments,
-    }
-    
-    return render(request, 'secretary_dash/doctor/dashboard.html', context)
+        'calendar_appointments': json.dumps(calendar_appointments),
+        'busy_hours': json.dumps(busy_hours)
+    })
 
 @login_required
 @user_passes_test(is_doctor)
@@ -518,4 +523,74 @@ def examination_delete(request, pk):
         return redirect('secretary_dash:examination_list')
     return render(request, 'secretary_dash/doctor/examination_confirm_delete.html', {
         'examination': examination
+    })
+
+# Busy Hours Views
+@login_required
+@user_passes_test(is_doctor)
+def busy_hours_list(request):
+    """
+    View to list all busy hours.
+    Only accessible by doctors.
+    """
+    busy_hours = BusyHours.objects.all().order_by('date', 'start_time')
+    return render(request, 'secretary_dash/doctor/busy_hours_list.html', {'busy_hours': busy_hours})
+
+@login_required
+@user_passes_test(is_doctor)
+def busy_hours_create(request):
+    """
+    View to create new busy hours.
+    Only accessible by doctors.
+    """
+    if request.method == 'POST':
+        form = BusyHoursForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Busy hours added successfully!')
+            return redirect('secretary_dash:busy_hours_list')
+    else:
+        form = BusyHoursForm()
+    
+    return render(request, 'secretary_dash/doctor/busy_hours_form.html', {
+        'form': form,
+        'title': 'Add Busy Hours'
+    })
+
+@login_required
+@user_passes_test(is_doctor)
+def busy_hours_edit(request, pk):
+    """
+    View to edit existing busy hours.
+    Only accessible by doctors.
+    """
+    busy_hours = get_object_or_404(BusyHours, pk=pk)
+    if request.method == 'POST':
+        form = BusyHoursForm(request.POST, instance=busy_hours)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Busy hours updated successfully!')
+            return redirect('secretary_dash:busy_hours_list')
+    else:
+        form = BusyHoursForm(instance=busy_hours)
+    
+    return render(request, 'secretary_dash/doctor/busy_hours_form.html', {
+        'form': form,
+        'title': 'Edit Busy Hours'
+    })
+
+@login_required
+@user_passes_test(is_doctor)
+def busy_hours_delete(request, pk):
+    """
+    View to delete busy hours.
+    Only accessible by doctors.
+    """
+    busy_hours = get_object_or_404(BusyHours, pk=pk)
+    if request.method == 'POST':
+        busy_hours.delete()
+        messages.success(request, 'Busy hours deleted successfully!')
+        return redirect('secretary_dash:busy_hours_list')
+    return render(request, 'secretary_dash/doctor/busy_hours_confirm_delete.html', {
+        'busy_hours': busy_hours
     })

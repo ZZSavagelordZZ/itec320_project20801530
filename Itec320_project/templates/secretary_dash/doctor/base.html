@@ -43,6 +43,12 @@
                     <span>Examinations</span>
                 </a>
             </li>
+            <li>
+                <a href="{% url 'secretary_dash:busy_hours_list' %}" class="btn {% if request.resolver_match.url_name == 'busy_hours_list' %}active{% endif %}">
+                    <i class="fas fa-clock"></i>
+                    <span>Busy Hours</span>
+                </a>
+            </li>
         </ul>
         <div class="user-menu">
             <a href="{% url 'secretary_dash:password_change' %}" class="btn {% if request.resolver_match.url_name == 'password_change' %}active{% endif %}">

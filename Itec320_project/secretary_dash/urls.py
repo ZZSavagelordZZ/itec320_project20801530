@@ -33,6 +33,12 @@ urlpatterns = [
     path('doctor/secretaries/<int:pk>/edit/', views.secretary_edit, name='secretary_edit'),
     path('doctor/secretaries/<int:pk>/delete/', views.secretary_delete, name='secretary_delete'),
 
+    # Busy Hours URLs
+    path('doctor/busy-hours/', views.busy_hours_list, name='busy_hours_list'),
+    path('doctor/busy-hours/add/', views.busy_hours_create, name='busy_hours_create'),
+    path('doctor/busy-hours/<int:pk>/edit/', views.busy_hours_edit, name='busy_hours_edit'),
+    path('doctor/busy-hours/<int:pk>/delete/', views.busy_hours_delete, name='busy_hours_delete'),
+
     # Common URLs (accessible by both doctor and secretary)
     path('patients/', views.patient_list, name='patient_list'),
     path('patients/add/', views.patient_create, name='patient_create'),
@@ -45,6 +51,7 @@ urlpatterns = [
     path('appointments/<int:pk>/', views.appointment_detail, name='appointment_detail'),
     path('appointments/<int:pk>/edit/', views.appointment_edit, name='appointment_edit'),
     path('appointments/<int:pk>/cancel/', views.appointment_cancel, name='appointment_cancel'),
+    path('appointments/<int:pk>/delete/', views.appointment_delete, name='appointment_delete'),
 
     path('medicines/', views.medicine_list, name='medicine_list'),
     path('medicines/add/', views.medicine_create, name='medicine_create'),

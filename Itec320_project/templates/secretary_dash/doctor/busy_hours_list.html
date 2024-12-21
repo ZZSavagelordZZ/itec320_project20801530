@@ -1,0 +1,54 @@
+{% extends 'secretary_dash/common/table_base.html' %}
+
+{% block page_title %}Busy Hours{% endblock %}
+
+{% block header_actions %}
+<a href="{% url 'secretary_dash:busy_hours_create' %}" class="btn btn-add">
+    <i class="fas fa-clock"></i>
+    <span>Add Busy Hours</span>
+</a>
+{% endblock %}
+
+{% block table_content %}
+{% if busy_hours %}
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+                <th>Reason</th>
+                <th class="actions-column">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for busy in busy_hours %}
+                <tr>
+                    <td>{{ busy.date }}</td>
+                    <td>{{ busy.start_time }}</td>
+                    <td>{{ busy.end_time }}</td>
+                    <td>{{ busy.reason|default:"-" }}</td>
+                    <td class="actions">
+                        <a href="{% url 'secretary_dash:busy_hours_edit' busy.id %}" class="btn btn-edit btn-sm">
+                            <i class="fas fa-edit"></i>
+                            <span>Edit</span>
+                        </a>
+                        <form method="post" action="{% url 'secretary_dash:busy_hours_delete' busy.id %}" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-delete btn-sm" onclick="return confirm('Are you sure you want to delete these busy hours?');">
+                                <i class="fas fa-trash"></i>
+                                <span>Delete</span>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <div class="no-data">
+        <i class="far fa-clock"></i>
+        <p>No busy hours scheduled.</p>
+    </div>
+{% endif %}
+{% endblock %} 

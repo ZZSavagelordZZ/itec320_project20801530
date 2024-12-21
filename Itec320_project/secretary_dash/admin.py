@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Secretary, Patient, Appointment, Medicine, Examination, Prescription
+from .models import Secretary, Patient, Appointment, Medicine, Examination, Prescription, BusyHours
 
 @admin.register(Secretary)
 class SecretaryAdmin(admin.ModelAdmin):
@@ -33,3 +33,9 @@ class ExaminationAdmin(admin.ModelAdmin):
 class PrescriptionAdmin(admin.ModelAdmin):
     list_display = ('examination', 'medicine', 'dosage', 'duration')
     search_fields = ('examination__patient__name', 'medicine__name')
+
+@admin.register(BusyHours)
+class BusyHoursAdmin(admin.ModelAdmin):
+    list_display = ('date', 'start_time', 'end_time', 'reason')
+    list_filter = ('date',)
+    search_fields = ('reason',)
