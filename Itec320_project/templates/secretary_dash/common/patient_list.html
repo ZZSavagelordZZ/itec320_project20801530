@@ -1,0 +1,53 @@
+{% extends 'secretary_dash/common/table_base.html' %}
+
+{% block page_title %}Patients{% endblock %}
+
+{% block header_actions %}
+<a href="{% url 'secretary_dash:patient_create' %}" class="btn btn-add">
+    <i class="fas fa-user-plus"></i>
+    <span>New Patient</span>
+</a>
+{% endblock %}
+
+{% block table_content %}
+{% if patients %}
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for patient in patients %}
+                <tr>
+                    <td>{{ patient.name }}</td>
+                    <td>{{ patient.phone }}</td>
+                    <td>{{ patient.email }}</td>
+                    <td class="actions">
+                        <a href="{% url 'secretary_dash:patient_detail' patient.id %}" class="btn btn-view btn-sm">
+                            <i class="fas fa-eye"></i>
+                            <span>View</span>
+                        </a>
+                        <a href="{% url 'secretary_dash:patient_edit' patient.id %}" class="btn btn-edit btn-sm">
+                            <i class="fas fa-edit"></i>
+                            <span>Edit</span>
+                        </a>
+                        <form method="post" action="{% url 'secretary_dash:patient_delete' patient.id %}" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-delete btn-sm" onclick="return confirm('Are you sure you want to delete this patient?');">
+                                <i class="fas fa-trash-alt"></i>
+                                <span>Delete</span>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p class="no-data">No patients found.</p>
+{% endif %}
+{% endblock %} 

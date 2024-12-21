@@ -1,0 +1,55 @@
+{% extends request.user.is_superuser|yesno:'secretary_dash/doctor/base.html,secretary_dash/secretary/base.html' %}
+
+{% block content %}
+<div class="delete-confirmation">
+    <h1>Delete Patient</h1>
+    
+    <div class="warning-box">
+        <p>Are you sure you want to delete the patient record for <strong>{{ patient.name }}</strong>?</p>
+        <p class="warning-text">This action cannot be undone. All associated appointments and examinations will also be deleted.</p>
+    </div>
+
+    <div class="patient-info">
+        <p><strong>Name:</strong> {{ patient.name }}</p>
+        <p><strong>Date of Birth:</strong> {{ patient.date_of_birth }}</p>
+        <p><strong>Phone:</strong> {{ patient.phone }}</p>
+        <p><strong>Email:</strong> {{ patient.email }}</p>
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="action-buttons">
+            <button type="submit" class="btn btn-danger">Confirm Delete</button>
+            <a href="{% url 'secretary_dash:patient_list' %}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+
+<style>
+    .delete-confirmation {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    .warning-box {
+        background-color: #fff3cd;
+        border: 1px solid #ffeeba;
+        color: #856404;
+        padding: 15px;
+        border-radius: 4px;
+        margin-bottom: 20px;
+    }
+    .warning-text {
+        color: #dc3545;
+        font-weight: bold;
+        margin-top: 10px;
+    }
+    .patient-info {
+        background: white;
+        padding: 20px;
+        border-radius: 4px;
+        margin: 20px 0;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+</style>
+{% endblock %} 

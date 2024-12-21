@@ -1,0 +1,229 @@
+{% extends 'secretary_dash/common/form_base.html' %}
+
+{% block page_title %}{% if form.instance.pk %}Edit{% else %}Add New{% endif %} Examination{% endblock %}
+
+{% block form_content %}
+<form method="post" id="examination-form">
+    {% csrf_token %}
+    
+    <div class="form-section">
+        <h3>Examination Details</h3>
+        <div class="form-group {% if form.patient.field.required %}required-field{% endif %} {% if form.patient.errors %}has-error{% endif %}">
+            <label for="{{ form.patient.id_for_label }}">Patient:</label>
+            {{ form.patient }}
+            {% if form.patient.help_text %}
+                <div class="help-text">{{ form.patient.help_text }}</div>
+            {% endif %}
+            {% if form.patient.errors %}
+                <div class="error">{{ form.patient.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group {% if form.date.field.required %}required-field{% endif %} {% if form.date.errors %}has-error{% endif %}">
+            <label for="{{ form.date.id_for_label }}">Date:</label>
+            {{ form.date }}
+            {% if form.date.help_text %}
+                <div class="help-text">{{ form.date.help_text }}</div>
+            {% endif %}
+            {% if form.date.errors %}
+                <div class="error">{{ form.date.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group {% if form.time.field.required %}required-field{% endif %} {% if form.time.errors %}has-error{% endif %}">
+            <label for="{{ form.time.id_for_label }}">Time:</label>
+            {{ form.time }}
+            {% if form.time.help_text %}
+                <div class="help-text">{{ form.time.help_text }}</div>
+            {% endif %}
+            {% if form.time.errors %}
+                <div class="error">{{ form.time.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group {% if form.symptoms.field.required %}required-field{% endif %} {% if form.symptoms.errors %}has-error{% endif %}">
+            <label for="{{ form.symptoms.id_for_label }}">Symptoms:</label>
+            {{ form.symptoms }}
+            {% if form.symptoms.help_text %}
+                <div class="help-text">{{ form.symptoms.help_text }}</div>
+            {% endif %}
+            {% if form.symptoms.errors %}
+                <div class="error">{{ form.symptoms.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group {% if form.diagnosis.field.required %}required-field{% endif %} {% if form.diagnosis.errors %}has-error{% endif %}">
+            <label for="{{ form.diagnosis.id_for_label }}">Diagnosis:</label>
+            {{ form.diagnosis }}
+            {% if form.diagnosis.help_text %}
+                <div class="help-text">{{ form.diagnosis.help_text }}</div>
+            {% endif %}
+            {% if form.diagnosis.errors %}
+                <div class="error">{{ form.diagnosis.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group {% if form.treatment.field.required %}required-field{% endif %} {% if form.treatment.errors %}has-error{% endif %}">
+            <label for="{{ form.treatment.id_for_label }}">Treatment:</label>
+            {{ form.treatment }}
+            {% if form.treatment.help_text %}
+                <div class="help-text">{{ form.treatment.help_text }}</div>
+            {% endif %}
+            {% if form.treatment.errors %}
+                <div class="error">{{ form.treatment.errors }}</div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="form-section">
+        <h3>Prescriptions</h3>
+        {{ prescription_formset.management_form }}
+        <div id="prescriptions">
+            {% for prescription_form in prescription_formset %}
+                <div class="prescription-form">
+                    <div class="form-group">
+                        <label>Medicine:</label>
+                        {{ prescription_form.medicine }}
+                        {% if prescription_form.medicine.errors %}
+                            <div class="error">{{ prescription_form.medicine.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label>Dosage:</label>
+                        {{ prescription_form.dosage }}
+                        {% if prescription_form.dosage.errors %}
+                            <div class="error">{{ prescription_form.dosage.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label>Duration:</label>
+                        {{ prescription_form.duration }}
+                        {% if prescription_form.duration.errors %}
+                            <div class="error">{{ prescription_form.duration.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label>Notes:</label>
+                        {{ prescription_form.notes }}
+                        {% if prescription_form.notes.errors %}
+                            <div class="error">{{ prescription_form.notes.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <button type="button" class="btn btn-delete remove-prescription">
+                        <i class="fas fa-trash"></i>
+                        <span>Remove</span>
+                    </button>
+                </div>
+            {% endfor %}
+        </div>
+        <button type="button" id="add-prescription" class="btn btn-add">
+            <i class="fas fa-plus"></i>
+            <span>Add Another Prescription</span>
+        </button>
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" class="btn btn-add">
+            <i class="fas fa-save"></i>
+            <span>Save Examination</span>
+        </button>
+        <a href="{% url 'secretary_dash:examination_list' %}" class="btn btn-cancel">
+            <i class="fas fa-times"></i>
+            <span>Cancel</span>
+        </a>
+    </div>
+</form>
+
+<style>
+    .form-section {
+        margin-bottom: 2rem;
+        padding-bottom: 2rem;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .form-section:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+
+    .form-section h3 {
+        color: #2d3436;
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+    }
+
+    .prescription-form {
+        background: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 6px;
+        margin-bottom: 1rem;
+        position: relative;
+    }
+
+    .prescription-form .btn-delete {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        padding: 0.5rem 1rem;
+        background-color: #d32f2f !important;
+        color: white !important;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: background-color 0.2s;
+    }
+
+    .prescription-form .btn-delete:hover {
+        background-color: #b71c1c !important;
+    }
+
+    .prescription-form .btn-delete i {
+        font-size: 1rem;
+    }
+
+    #add-prescription {
+        margin-top: 1rem;
+    }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const addButton = document.getElementById('add-prescription');
+    const prescriptionsContainer = document.getElementById('prescriptions');
+    const totalForms = document.getElementById('id_prescription_set-TOTAL_FORMS');
+
+    // Add new prescription form
+    addButton.addEventListener('click', function() {
+        const formCount = prescriptionsContainer.children.length;
+        const template = prescriptionsContainer.children[0].cloneNode(true);
+        
+        // Update form index
+        template.innerHTML = template.innerHTML.replace(/-\d+-/g, `-${formCount}-`);
+        
+        // Clear form values
+        template.querySelectorAll('input, select, textarea').forEach(input => {
+            input.value = '';
+        });
+        
+        prescriptionsContainer.appendChild(template);
+        totalForms.value = formCount + 1;
+    });
+
+    // Remove prescription form
+    prescriptionsContainer.addEventListener('click', function(e) {
+        if (e.target.closest('.remove-prescription')) {
+            const prescriptionForm = e.target.closest('.prescription-form');
+            if (prescriptionsContainer.children.length > 1) {
+                prescriptionForm.remove();
+                totalForms.value = prescriptionsContainer.children.length;
+            }
+        }
+    });
+});
+</script>
+{% endblock %} 

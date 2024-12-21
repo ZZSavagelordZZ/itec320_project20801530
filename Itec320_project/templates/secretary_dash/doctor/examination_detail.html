@@ -1,0 +1,124 @@
+{% extends 'secretary_dash/doctor/base.html' %}
+
+{% block content %}
+<div class="examination-detail-container">
+    <div class="header">
+        <h1>Examination Details</h1>
+        <div class="actions">
+            <a href="{% url 'secretary_dash:examination_edit' examination.id %}" class="btn btn-primary">Edit</a>
+            <a href="{% url 'secretary_dash:examination_list' %}" class="btn btn-secondary">Back to List</a>
+        </div>
+    </div>
+
+    <div class="detail-section">
+        <h2>Patient Information</h2>
+        <div class="info-grid">
+            <div class="info-item">
+                <label>Name:</label>
+                <span>{{ examination.patient.name }}</span>
+            </div>
+            <div class="info-item">
+                <label>Date:</label>
+                <span>{{ examination.date }}</span>
+            </div>
+            <div class="info-item">
+                <label>Time:</label>
+                <span>{{ examination.time }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="detail-section">
+        <h2>Examination Details</h2>
+        <div class="info-grid">
+            <div class="info-item full-width">
+                <label>Symptoms:</label>
+                <p>{{ examination.symptoms }}</p>
+            </div>
+            <div class="info-item full-width">
+                <label>Diagnosis:</label>
+                <p>{{ examination.diagnosis }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="detail-section">
+        <h2>Prescriptions</h2>
+        {% if examination.prescription_set.all %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Medicine</th>
+                        <th>Dosage</th>
+                        <th>Duration</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for prescription in examination.prescription_set.all %}
+                        <tr>
+                            <td>{{ prescription.medicine.name }}</td>
+                            <td>{{ prescription.dosage }}</td>
+                            <td>{{ prescription.duration }}</td>
+                            <td>{{ prescription.notes }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No prescriptions added to this examination.</p>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    .examination-detail-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+    .detail-section {
+        background: white;
+        padding: 20px;
+        border-radius: 4px;
+        margin-bottom: 20px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+    }
+    .info-item {
+        margin-bottom: 15px;
+    }
+    .info-item label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: #666;
+    }
+    .full-width {
+        grid-column: 1 / -1;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    th, td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+    th {
+        background-color: #f8f9fa;
+        font-weight: bold;
+    }
+</style>
+{% endblock %} 

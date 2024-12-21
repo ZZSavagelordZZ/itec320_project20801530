@@ -1,0 +1,154 @@
+{% extends request.user.is_superuser|yesno:'secretary_dash/doctor/base.html,secretary_dash/secretary/base.html' %}
+
+{% block content %}
+<div class="patient-detail-container">
+    <div class="header">
+        <h1>Patient Details</h1>
+        <div class="actions">
+            <a href="{% url 'secretary_dash:patient_edit' patient.id %}" class="btn btn-primary">Edit</a>
+            {% if request.user.is_superuser %}
+                <a href="{% url 'secretary_dash:examination_create' %}?patient={{ patient.id }}" class="btn btn-success">New Examination</a>
+            {% endif %}
+            <a href="{% url 'secretary_dash:appointment_create' %}?patient={{ patient.id }}" class="btn btn-info">Schedule Appointment</a>
+            <a href="{% url 'secretary_dash:patient_list' %}" class="btn btn-secondary">Back to List</a>
+        </div>
+    </div>
+
+    <div class="detail-section">
+        <h2>Personal Information</h2>
+        <div class="info-grid">
+            <div class="info-item">
+                <label>Name:</label>
+                <span>{{ patient.name }}</span>
+            </div>
+            <div class="info-item">
+                <label>Date of Birth:</label>
+                <span>{{ patient.date_of_birth }}</span>
+            </div>
+            <div class="info-item">
+                <label>Gender:</label>
+                <span>{{ patient.get_gender_display }}</span>
+            </div>
+            <div class="info-item">
+                <label>Phone:</label>
+                <span>{{ patient.phone }}</span>
+            </div>
+            <div class="info-item">
+                <label>Email:</label>
+                <span>{{ patient.email }}</span>
+            </div>
+            <div class="info-item full-width">
+                <label>Address:</label>
+                <span>{{ patient.address }}</span>
+            </div>
+            <div class="info-item full-width">
+                <label>Medical History:</label>
+                <p>{{ patient.medical_history }}</p>
+            </div>
+        </div>
+    </div>
+
+    {% if request.user.is_superuser %}
+    <div class="detail-section">
+        <h2>Recent Examinations</h2>
+        {% if patient.examination_set.all %}
+            {% for examination in patient.examination_set.all|slice:":5" %}
+                <div class="examination-card">
+                    <h3>Examination on {{ examination.date }}</h3>
+                    <div class="exam-details">
+                        <p><strong>Symptoms:</strong> {{ examination.symptoms }}</p>
+                        <p><strong>Diagnosis:</strong> {{ examination.diagnosis }}</p>
+                        {% if examination.prescription_set.all %}
+                            <div class="prescriptions">
+                                <h4>Prescriptions:</h4>
+                                {% for prescription in examination.prescription_set.all %}
+                                    <div class="prescription">
+                                        <p><strong>{{ prescription.medicine.name }}</strong></p>
+                                        <p>Dosage: {{ prescription.dosage }}</p>
+                                        <p>Duration: {{ prescription.duration }}</p>
+                                        {% if prescription.notes %}
+                                            <p>Notes: {{ prescription.notes }}</p>
+                                        {% endif %}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No examinations found for this patient.</p>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <div class="detail-section">
+        <h2>Upcoming Appointments</h2>
+        {% if patient.appointment_set.upcoming %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for appointment in patient.appointment_set.upcoming %}
+                        <tr>
+                            <td>{{ appointment.date }}</td>
+                            <td>{{ appointment.time }}</td>
+                            <td>{{ appointment.get_status_display }}</td>
+                            <td class="actions">
+                                {% if appointment.status != 'cancelled' %}
+                                    <form method="post" action="{% url 'secretary_dash:appointment_cancel' appointment.id %}" style="display: inline;">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-sm btn-warning">Cancel</button>
+                                    </form>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No upcoming appointments.</p>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    .patient-detail-container {
+        padding: 20px;
+    }
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+    .detail-section {
+        background: white;
+        padding: 20px;
+        border-radius: 4px;
+        margin-bottom: 20px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+    }
+    .info-item label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: #666;
+    }
+    .full-width {
+        grid-column: 1 / -1;
+    }
+    /* ... (keep existing styles) ... */
+</style>
+{% endblock %} 

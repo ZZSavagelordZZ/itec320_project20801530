@@ -1,0 +1,57 @@
+{% extends 'secretary_dash/common/table_base.html' %}
+
+{% block page_title %}Appointments{% endblock %}
+
+{% block header_actions %}
+<a href="{% url 'secretary_dash:appointment_create' %}" class="btn btn-add">
+    <i class="fas fa-calendar-plus"></i>
+    <span>New Appointment</span>
+</a>
+{% endblock %}
+
+{% block table_content %}
+{% if appointments %}
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Patient</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for appointment in appointments %}
+                <tr>
+                    <td>{{ appointment.date }}</td>
+                    <td>{{ appointment.time }}</td>
+                    <td>{{ appointment.patient.name }}</td>
+                    <td>
+                        <span class="badge badge-{% if appointment.is_cancelled %}warning{% else %}success{% endif %}">
+                            {% if appointment.is_cancelled %}Cancelled{% else %}Active{% endif %}
+                        </span>
+                    </td>
+                    <td class="actions">
+                        {% if not appointment.is_cancelled %}
+                            <a href="{% url 'secretary_dash:appointment_edit' appointment.id %}" class="btn btn-edit btn-sm">
+                                <i class="fas fa-edit"></i>
+                                <span>Edit</span>
+                            </a>
+                            <form method="post" action="{% url 'secretary_dash:appointment_cancel' appointment.id %}" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-cancel btn-sm" onclick="return confirm('Are you sure you want to cancel this appointment?');">
+                                    <i class="fas fa-ban"></i>
+                                    <span>Cancel</span>
+                                </button>
+                            </form>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p class="no-data">No appointments found.</p>
+{% endif %}
+{% endblock %} 

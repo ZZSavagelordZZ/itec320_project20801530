@@ -1,0 +1,94 @@
+{% extends 'secretary_dash/common/base.html' %}
+
+{% block content %}
+    <h1>{% if user.is_superuser %}My Schedule{% else %}Appointment Calendar{% endif %}</h1>
+    
+    <div class="calendar-nav">
+        <a href="?start_date={{ prev_week|date:'Y-m-d' }}" class="btn">&lt; Previous Week</a>
+        <span class="current-week">{{ start_date|date:'F d' }} - {{ end_date|date:'F d, Y' }}</span>
+        <a href="?start_date={{ next_week|date:'Y-m-d' }}" class="btn">Next Week &gt;</a>
+    </div>
+
+    <div class="calendar">
+        {% for date, appointments in appointment_days.items %}
+            <div class="day {% if date == today %}today{% endif %}">
+                <h3>{{ date|date:'l, F d' }}</h3>
+                <div class="appointments">
+                    {% for appointment in appointments %}
+                        <div class="appointment {% if appointment.is_cancelled %}cancelled{% endif %}">
+                            <time>{{ appointment.time|time:'H:i' }}</time>
+                            <div class="patient-info">
+                                <strong>{{ appointment.patient }}</strong>
+                                <span>{{ appointment.patient.phone }}</span>
+                            </div>
+                            <div class="actions">
+                                {% if not appointment.is_cancelled %}
+                                    {% if user.is_superuser %}
+                                        <a href="{% url 'edit_appointment' appointment.id %}" class="btn btn-sm">Edit</a>
+                                    {% endif %}
+                                    <form method="post" action="{% url 'cancel_appointment' appointment.id %}" style="display: inline;">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to cancel this appointment?')">Cancel</button>
+                                    </form>
+                                {% else %}
+                                    <span class="cancelled-text">Cancelled</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% empty %}
+                        <p class="no-appointments">No appointments scheduled</p>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <style>
+        .calendar-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+        }
+        .current-week {
+            font-size: 1.25rem;
+            font-weight: bold;
+        }
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+        .day {
+            border: 1px solid #ddd;
+            padding: 1rem;
+            border-radius: 4px;
+        }
+        .today {
+            background-color: #f8f9fa;
+            border-color: #007bff;
+        }
+        .appointment {
+            border: 1px solid #eee;
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+            border-radius: 4px;
+        }
+        .appointment.cancelled {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+        .patient-info {
+            margin: 0.5rem 0;
+        }
+        .patient-info span {
+            display: block;
+            font-size: 0.875rem;
+            color: #666;
+        }
+        .no-appointments {
+            color: #666;
+            font-style: italic;
+        }
+    </style>
+{% endblock %} 

@@ -1,0 +1,53 @@
+{% extends 'secretary_dash/common/form_base.html' %}
+
+{% block page_title %}{% if form.instance.pk %}Edit Medicine{% else %}Add New Medicine{% endif %}{% endblock %}
+
+{% block form_content %}
+<form method="post">
+    {% csrf_token %}
+    
+    <div class="form-group {% if form.name.field.required %}required-field{% endif %} {% if form.name.errors %}has-error{% endif %}">
+        <label for="{{ form.name.id_for_label }}">Name:</label>
+        {{ form.name }}
+        {% if form.name.help_text %}
+            <div class="help-text">{{ form.name.help_text }}</div>
+        {% endif %}
+        {% if form.name.errors %}
+            <div class="error">{{ form.name.errors }}</div>
+        {% endif %}
+    </div>
+
+    <div class="form-group {% if form.description.field.required %}required-field{% endif %} {% if form.description.errors %}has-error{% endif %}">
+        <label for="{{ form.description.id_for_label }}">Description:</label>
+        {{ form.description }}
+        {% if form.description.help_text %}
+            <div class="help-text">{{ form.description.help_text }}</div>
+        {% endif %}
+        {% if form.description.errors %}
+            <div class="error">{{ form.description.errors }}</div>
+        {% endif %}
+    </div>
+
+    <div class="form-group {% if form.side_effects.field.required %}required-field{% endif %} {% if form.side_effects.errors %}has-error{% endif %}">
+        <label for="{{ form.side_effects.id_for_label }}">Side Effects:</label>
+        {{ form.side_effects }}
+        {% if form.side_effects.help_text %}
+            <div class="help-text">{{ form.side_effects.help_text }}</div>
+        {% endif %}
+        {% if form.side_effects.errors %}
+            <div class="error">{{ form.side_effects.errors }}</div>
+        {% endif %}
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" class="btn btn-add">
+            <i class="fas fa-save"></i>
+            <span>Save Medicine</span>
+        </button>
+        <a href="{% url 'secretary_dash:medicine_list' %}" class="btn btn-cancel">
+            <i class="fas fa-times"></i>
+            <span>Cancel</span>
+        </a>
+    </div>
+</form>
+{% endblock %} 

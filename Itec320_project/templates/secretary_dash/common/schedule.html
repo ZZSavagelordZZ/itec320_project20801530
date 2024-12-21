@@ -1,0 +1,70 @@
+{% extends 'secretary_dash/common/base.html' %}
+
+{% block content %}
+<div class="schedule-container">
+    <h1>Doctor's Schedule</h1>
+    <div class="appointments-section">
+        {% for day, appointments in schedule.items %}
+            <h2>{{ day }}</h2>
+            <div class="appointments-list">
+                {% for appointment in appointments %}
+                    <div class="appointment-card">
+                        <p><strong>Time:</strong> {{ appointment.time }}</p>
+                        <p><strong>Patient:</strong> {{ appointment.patient.name }}</p>
+                        <p><strong>Status:</strong> 
+                            {% if not appointment.is_cancelled %}
+                                Active
+                            {% else %}
+                                Cancelled
+                            {% endif %}
+                        </p>
+                        <div class="actions">
+                            {% if not appointment.is_cancelled %}
+                                <a href="{% url 'secretary_dash:edit_appointment' appointment.id %}" class="btn btn-sm">Edit</a>
+                                <form method="post" action="{% url 'secretary_dash:doctor_cancel_appointment' appointment.id %}" style="display: inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to cancel this appointment?')">Cancel</button>
+                                </form>
+                            {% else %}
+                                <span class="cancelled-text">Cancelled</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% empty %}
+                    <p>No appointments scheduled for this day.</p>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+    .schedule-container {
+        padding: 20px;
+    }
+    .appointments-section {
+        margin-top: 20px;
+    }
+    .appointment-card {
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+        padding: 10px;
+        margin-bottom: 10px;
+        background-color: #fff;
+    }
+    .actions {
+        margin-top: 10px;
+    }
+    .btn-sm {
+        padding: 3px 8px;
+        font-size: 0.875em;
+    }
+    .btn-danger {
+        background-color: #dc3545;
+    }
+    .cancelled-text {
+        color: #dc3545;
+        font-weight: bold;
+    }
+</style>
+{% endblock %} 
