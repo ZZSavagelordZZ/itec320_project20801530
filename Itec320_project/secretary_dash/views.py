@@ -1,17 +1,27 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
-from django.contrib.auth import logout, authenticate, login
+from django.contrib.auth import logout, authenticate, login, get_user_model
 from django.forms import inlineformset_factory
 from .models import Patient, Appointment, Secretary, Medicine, Examination, Prescription, BusyHours
 from .forms import (
     PatientForm, AppointmentForm, MedicineForm, 
-    ExaminationForm, SecretaryCreationForm, PrescriptionForm, BusyHoursForm
+    ExaminationForm, SecretaryCreationForm, PrescriptionForm, BusyHoursForm,
+    EmailLoginForm, ForgotPasswordForm, SetPasswordForm
 )
 from datetime import datetime, timedelta
 from django.utils import timezone
 from django.db.models import Count
+from django.core.mail import send_mail
+from django.conf import settings
+from django.template.loader import render_to_string
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
+from .tokens import password_reset_token
 import json
+import logging
+
+logger = logging.getLogger(__name__)
 
 def is_secretary(user):
     return Secretary.objects.filter(user=user).exists()
@@ -41,17 +51,21 @@ def login_view(request):
         return redirect('secretary_dash:root')
     
     if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        user = authenticate(request, username=username, password=password)
-        
-        if user is not None:
-            login(request, user)
-            return redirect('secretary_dash:root')
-        else:
-            messages.error(request, 'Invalid username or password')
+        form = EmailLoginForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            password = form.cleaned_data['password']
+            user = authenticate(request, username=email, password=password)
+            
+            if user is not None:
+                login(request, user)
+                return redirect('secretary_dash:root')
+            else:
+                messages.error(request, 'Invalid email or password')
+    else:
+        form = EmailLoginForm()
     
-    return render(request, 'secretary_dash/login.html')
+    return render(request, 'secretary_dash/login.html', {'form': form})
 
 # Common views for both roles
 def is_staff(user):
@@ -594,3 +608,103 @@ def busy_hours_delete(request, pk):
     return render(request, 'secretary_dash/doctor/busy_hours_confirm_delete.html', {
         'busy_hours': busy_hours
     })
+
+def forgot_password(request):
+    if request.method == 'POST':
+        form = ForgotPasswordForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            logger.debug(f"Processing password reset request for email: {email}")
+            
+            try:
+                user = get_user_model().objects.get(email=email)
+                
+                # Generate password reset token
+                uid = urlsafe_base64_encode(force_bytes(user.pk))
+                token = password_reset_token.make_token(user)
+                
+                # Build reset URL
+                reset_url = request.build_absolute_uri(f'/reset-password/{uid}/{token}/')
+                
+                # Create email content
+                subject = 'Password Reset Request'
+                message = render_to_string('registration/password_reset_email.html', {
+                    'user': user,
+                    'reset_url': reset_url,
+                })
+                from_email = settings.EMAIL_HOST_USER
+                recipient_list = [email]
+                
+                # Log all email settings
+                logger.debug("Email settings:")
+                logger.debug(f"Reset URL: {reset_url}")
+                logger.debug(f"EMAIL_BACKEND: {settings.EMAIL_BACKEND}")
+                logger.debug(f"EMAIL_HOST: {settings.EMAIL_HOST}")
+                logger.debug(f"EMAIL_PORT: {settings.EMAIL_PORT}")
+                logger.debug(f"EMAIL_USE_TLS: {settings.EMAIL_USE_TLS}")
+                logger.debug(f"EMAIL_HOST_USER: {settings.EMAIL_HOST_USER}")
+                
+                try:
+                    # Send the email
+                    email_sent = send_mail(
+                        subject,
+                        message,
+                        from_email,
+                        recipient_list,
+                        fail_silently=False,
+                        html_message=message,
+                    )
+                    
+                    if email_sent:
+                        logger.debug(f"Password reset email sent successfully to {email}")
+                        messages.success(request, 'Password reset instructions have been sent to your email.')
+                    else:
+                        logger.error(f"Failed to send password reset email to {email}")
+                        messages.error(request, 'Failed to send email. Please try again later.')
+                    
+                except Exception as smtp_error:
+                    logger.exception(f"SMTP Error: {str(smtp_error)}")
+                    messages.error(request, f'SMTP Error: {str(smtp_error)}')
+                
+            except Exception as e:
+                logger.exception(f"Unexpected error: {str(e)}")
+                messages.error(request, 'An unexpected error occurred. Please try again later.')
+            
+            return redirect('login')
+    else:
+        form = ForgotPasswordForm()
+    
+    return render(request, 'registration/forgot_password.html', {'form': form})
+
+def reset_password(request, uidb64, token):
+    try:
+        # Decode the user ID
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = get_user_model().objects.get(pk=uid)
+        
+        # Verify the token
+        if password_reset_token.check_token(user, token):
+            if request.method == 'POST':
+                form = SetPasswordForm(request.POST)
+                if form.is_valid():
+                    # Set the new password
+                    user.set_password(form.cleaned_data['new_password1'])
+                    user.save()
+                    messages.success(request, 'Your password has been reset successfully. You can now login with your new password.')
+                    return redirect('login')
+            else:
+                form = SetPasswordForm()
+            
+            return render(request, 'registration/password_reset.html', {
+                'form': form,
+                'validlink': True
+            })
+        else:
+            return render(request, 'registration/password_reset.html', {
+                'validlink': False
+            })
+            
+    except (TypeError, ValueError, OverflowError, get_user_model().DoesNotExist):
+        return render(request, 'registration/password_reset.html', {
+            'validlink': False
+        })

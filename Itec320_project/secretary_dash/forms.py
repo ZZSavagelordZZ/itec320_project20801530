@@ -4,6 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from .models import Patient, Appointment, Medicine, Examination, Prescription, Secretary, BusyHours
 from django.core.exceptions import ValidationError
 from django.utils import timezone
+from django.contrib.auth import get_user_model
 
 class PatientForm(forms.ModelForm):
     class Meta:
@@ -156,3 +157,64 @@ class BusyHoursForm(forms.ModelForm):
             
             if overlapping.exists():
                 raise ValidationError('These busy hours overlap with existing busy hours.')
+
+class EmailLoginForm(forms.Form):
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email'}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password'}))
+
+    def clean(self):
+        cleaned_data = super().clean()
+        email = cleaned_data.get('email')
+        password = cleaned_data.get('password')
+
+        if email and password:
+            UserModel = get_user_model()
+            try:
+                user = UserModel.objects.get(email=email)
+            except UserModel.DoesNotExist:
+                raise forms.ValidationError("Invalid email or password.")
+        return cleaned_data
+
+class ForgotPasswordForm(forms.Form):
+    email = forms.EmailField(
+        widget=forms.EmailInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Enter your email address'
+        })
+    )
+
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        UserModel = get_user_model()
+        try:
+            user = UserModel.objects.get(email=email)
+        except UserModel.DoesNotExist:
+            raise forms.ValidationError("No user found with this email address.")
+        return email
+
+class SetPasswordForm(forms.Form):
+    new_password1 = forms.CharField(
+        label='New Password',
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Enter new password'
+        }),
+        strip=False,
+    )
+    new_password2 = forms.CharField(
+        label='Confirm New Password',
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Confirm new password'
+        }),
+        strip=False,
+    )
+
+    def clean(self):
+        cleaned_data = super().clean()
+        password1 = cleaned_data.get('new_password1')
+        password2 = cleaned_data.get('new_password2')
+        if password1 and password2:
+            if password1 != password2:
+                raise forms.ValidationError("The two password fields didn't match.")
+        return cleaned_data

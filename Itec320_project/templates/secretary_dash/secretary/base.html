@@ -27,10 +27,6 @@
             </li>
         </ul>
         <div class="user-menu">
-            <a href="{% url 'secretary_dash:password_change' %}" class="btn {% if request.resolver_match.url_name == 'password_change' %}active{% endif %}">
-                <i class="fas fa-key"></i>
-                <span>Change Password</span>
-            </a>
             <form method="post" action="{% url 'logout' %}">
                 {% csrf_token %}
                 <button type="submit" class="btn">

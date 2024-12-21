@@ -10,21 +10,8 @@ app_name = 'secretary_dash'
 urlpatterns = [
     # Root and Authentication
     path('', views.root_redirect, name='root'),
-
-    # Password Change URLs
-    path('password_change/', 
-        auth_views.PasswordChangeView.as_view(
-            template_name='secretary_dash/common/password_change.html',
-            success_url=reverse_lazy('secretary_dash:password_change_done')
-        ), 
-        name='password_change'
-    ),
-    path('password_change/done/', 
-        auth_views.PasswordChangeDoneView.as_view(
-            template_name='secretary_dash/common/password_change_done.html'
-        ), 
-        name='password_change_done'
-    ),
+    path('forgot-password/', views.forgot_password, name='forgot_password'),
+    path('reset-password/<str:uidb64>/<str:token>/', views.reset_password, name='reset_password'),
 
     # Doctor URLs
     path('doctor/', views.doctor_dashboard, name='doctor_dashboard'),
