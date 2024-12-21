@@ -1,0 +1,843 @@
+/* Main CSS file for the project */
+
+/* Reset and Base Styles */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: #f8f9fa;
+}
+
+/* Sidebar styles */
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    background-color: #343a40;
+    color: white;
+    padding: 20px 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.logo {
+    padding: 20px;
+    text-align: center;
+    text-decoration: none;
+    color: white !important;
+    font-size: 1.2rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.logo:hover {
+    color: white !important;
+    text-decoration: none;
+}
+
+.logo i {
+    color: white !important;
+}
+
+.nav-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex-grow: 1;
+}
+
+.nav-links li {
+    margin-bottom: 5px;
+}
+
+.nav-links .btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 20px;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    width: 100%;
+    border: none;
+    background: none;
+    text-align: left;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.nav-links .btn:hover,
+.nav-links .btn.active {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.nav-links .btn i {
+    width: 20px;
+    text-align: center;
+    color: white !important;
+}
+
+.user-menu {
+    padding: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.user-menu .btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 20px;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    width: 100%;
+    border: none;
+    background: none;
+    text-align: left;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-bottom: 5px;
+}
+
+.user-menu .btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.user-menu .btn i {
+    color: white !important;
+}
+
+/* Main content styles */
+.main-content {
+    margin-left: 250px;
+    padding: 20px;
+    min-height: 100vh;
+}
+
+/* Dashboard Container */
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+/* Stats Grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.stat-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.stat-icon {
+    width: 48px;
+    height: 48px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.stat-icon i {
+    font-size: 24px;
+    color: #28a745;
+}
+
+.stat-content h3 {
+    margin: 0;
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+
+.stat-number {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #2d3436;
+}
+
+/* Dashboard Section */
+.dashboard-section {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.dashboard-section h2 {
+    margin: 0 0 1.5rem;
+    color: #2d3436;
+    font-size: 1.25rem;
+}
+
+/* Quick Actions */
+.quick-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.action-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.2s;
+}
+
+.action-card:hover {
+    transform: translateY(-2px);
+    text-decoration: none;
+    color: inherit;
+}
+
+.action-icon {
+    width: 48px;
+    height: 48px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.action-icon i {
+    font-size: 24px;
+    color: #28a745;
+}
+
+.action-content h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #2d3436;
+}
+
+.action-content p {
+    margin: 0.5rem 0 0;
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+
+/* Calendar Styles */
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.calendar-container {
+    width: 100%;
+}
+
+.calendar-controls {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.calendar-navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.calendar-navigation h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    color: #2d3436;
+}
+
+#calendar {
+    background: white;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 1px;
+    background: #e9ecef;
+    border: 1px solid #e9ecef;
+}
+
+.calendar-header-cell {
+    background: #f8f9fa;
+    padding: 0.75rem;
+    text-align: center;
+    font-weight: 600;
+    color: #2d3436;
+}
+
+.calendar-cell {
+    background: white;
+    min-height: 100px;
+    padding: 0.5rem;
+    position: relative;
+}
+
+.calendar-cell.today {
+    background: #e3f2fd;
+}
+
+.calendar-cell .date {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #2d3436;
+}
+
+.calendar-cell.other-month .date {
+    color: #adb5bd;
+}
+
+.appointment-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin: 2px;
+    display: inline-block;
+}
+
+.appointment-active {
+    background-color: #28a745;
+}
+
+.appointment-cancelled {
+    background-color: #ffc107;
+}
+
+.appointment-preview {
+    font-size: 0.75rem;
+    margin: 2px 0;
+    padding: 2px 4px;
+    border-radius: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.appointment-preview.active {
+    background-color: rgba(40, 167, 69, 0.1);
+    color: #28a745;
+}
+
+.appointment-preview.cancelled {
+    background-color: rgba(255, 193, 7, 0.1);
+    color: #856404;
+}
+
+/* Week View Styles */
+.week-view {
+    display: grid;
+    grid-template-columns: 60px repeat(7, 1fr);
+    gap: 1px;
+    background: #e9ecef;
+    border: 1px solid #e9ecef;
+}
+
+.week-header-cell {
+    background: #f8f9fa;
+    padding: 0.75rem;
+    text-align: center;
+    font-weight: 600;
+    color: #2d3436;
+}
+
+.time-label {
+    padding: 0.5rem;
+    color: #6c757d;
+    font-size: 0.875rem;
+    text-align: right;
+    background: white;
+    border-right: 1px solid #e9ecef;
+}
+
+.appointment-slot {
+    padding: 0.25rem;
+    background: white;
+    min-height: 40px;
+}
+
+/* Day View Styles */
+.day-schedule {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    background: #e9ecef;
+    border: 1px solid #e9ecef;
+}
+
+.time-slot {
+    display: grid;
+    grid-template-columns: 60px 1fr;
+    min-height: 40px;
+    background: white;
+}
+
+.time-slot .appointment-preview {
+    margin: 0.25rem;
+    padding: 0.5rem;
+}
+
+/* Common Calendar Styles */
+.appointments-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin-top: 0.5rem;
+}
+
+.appointment-preview {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.9);
+}
+
+.appointment-preview.active {
+    border-left: 3px solid #28a745;
+}
+
+.appointment-preview.cancelled {
+    border-left: 3px solid #ffc107;
+}
+
+.appointment-preview span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Calendar Controls */
+.calendar-controls .btn {
+    padding: 0.5rem 1rem;
+    border: 1px solid #e9ecef;
+    background: white;
+    color: #6c757d;
+    font-weight: 500;
+    transition: all 0.2s;
+    border-radius: 4px;
+}
+
+.calendar-controls .btn i {
+    color: #6c757d !important;
+    transition: all 0.2s;
+}
+
+.calendar-controls .btn:hover {
+    background-color: #28a745;
+    color: white;
+    border-color: #28a745;
+}
+
+.calendar-controls .btn:hover i {
+    color: white !important;
+}
+
+.calendar-controls .btn.btn-primary {
+    background-color: #28a745 !important;
+    color: white !important;
+    border-color: #28a745 !important;
+}
+
+.calendar-controls .btn.btn-primary i {
+    color: white !important;
+}
+
+/* Calendar Navigation Styles */
+.calendar-navigation .btn {
+    padding: 0.5rem;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: white;
+    border: 1px solid #e9ecef;
+    color: #6c757d;
+    transition: all 0.2s;
+}
+
+.calendar-navigation .btn i {
+    color: #6c757d !important;
+    transition: all 0.2s;
+}
+
+.calendar-navigation .btn:hover {
+    background-color: #28a745;
+    color: white;
+    border-color: #28a745;
+}
+
+.calendar-navigation .btn:hover i {
+    color: white !important;
+}
+
+/* Responsive Calendar */
+@media (max-width: 768px) {
+    .calendar-header {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .calendar-controls {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .week-view {
+        grid-template-columns: 50px repeat(7, 1fr);
+    }
+
+    .week-time-row {
+        grid-template-columns: 50px repeat(7, 1fr);
+    }
+
+    .time-label {
+        font-size: 0.75rem;
+        padding: 0.25rem;
+    }
+
+    .appointment-preview span {
+        font-size: 0.7rem;
+    }
+}
+
+/* Keep sidebar icons white */
+.sidebar .fas, 
+.sidebar .far, 
+.sidebar .fab, 
+.sidebar .fa {
+    color: white !important;
+}
+
+/* Keep action card icons green */
+.action-icon .fas,
+.action-icon .far,
+.action-icon .fab,
+.action-icon .fa {
+    color: #28a745 !important;
+}
+
+/* Table Styles */
+.table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+}
+
+.table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: #2d3436;
+}
+
+.table th, .table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #e9ecef;
+    vertical-align: middle;
+}
+
+/* Global button styles */
+.btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    padding: 8px 16px !important;
+    border-radius: 4px !important;
+    border: none !important;
+    cursor: pointer !important;
+    font-weight: 500 !important;
+    transition: all 0.2s ease !important;
+    text-decoration: none !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+.btn-primary {
+    background-color: #2e7d32 !important;
+    color: white !important;
+}
+
+.btn-primary:hover {
+    background-color: #1b5e20 !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 70px;
+    }
+
+    .sidebar .logo span,
+    .nav-links .btn span {
+        display: none;
+    }
+
+    .main-content {
+        margin-left: 70px;
+        width: calc(100% - 70px);
+    }
+
+    .user-menu {
+        padding: 1rem 0.5rem;
+    }
+} 
+
+/* Calendar Section Layout */
+.calendar-section {
+    display: none;
+}
+
+.calendar-section::after {
+    display: none;
+}
+
+.calendar-wrapper {
+    display: none;
+}
+
+.todays-appointments {
+    width: 100%;
+    padding: 0;
+}
+
+.todays-appointments h2 {
+    margin-bottom: 1.5rem;
+}
+
+.appointment-item {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 1rem;
+    border-left: 3px solid #28a745;
+    transition: transform 0.2s ease;
+}
+
+.appointment-item:hover {
+    transform: translateY(-2px);
+}
+
+.appointment-item.appointment-cancelled {
+    border-left-color: #dc3545;
+    opacity: 0.8;
+}
+
+.appointment-time {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #2d3436;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.appointment-time i {
+    color: #28a745 !important;
+    font-size: 0.9rem;
+}
+
+.appointment-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.appointment-details h4 {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #2d3436;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.appointment-details h4 i {
+    color: #28a745 !important;
+    font-size: 0.8rem;
+}
+
+.appointment-details p {
+    margin: 0;
+    font-size: 0.8rem;
+    color: #6c757d;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.appointment-details p i {
+    color: #28a745 !important;
+    font-size: 0.8rem;
+}
+
+.appointment-status {
+    margin-top: 0.5rem;
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.status-badge i {
+    font-size: 0.8rem;
+}
+
+.status-active {
+    background-color: rgba(40, 167, 69, 0.1);
+    color: #28a745;
+}
+
+.status-active i {
+    color: #28a745 !important;
+}
+
+.status-cancelled {
+    background-color: rgba(220, 53, 69, 0.1);
+    color: #dc3545;
+}
+
+.status-cancelled i {
+    color: #dc3545 !important;
+}
+
+.no-appointments {
+    text-align: center;
+    padding: 2rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    color: #6c757d;
+}
+
+.no-appointments i {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: #6c757d !important;
+}
+
+.no-appointments p {
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+/* Calendar and Appointments Layout */
+.calendar-appointments-container {
+    display: flex;
+    gap: 2rem;
+}
+
+.calendar-side {
+    flex: 1;
+    min-width: 0; /* Prevents flex item from overflowing */
+}
+
+.appointments-side {
+    width: 300px;
+    flex-shrink: 0;
+    border-left: 3px solid rgba(52, 58, 64, 0.15);
+    padding-left: 2rem;
+}
+
+.todays-appointments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-height: 600px;
+    overflow-y: auto;
+} 
+
+/* Make dashboard icons green */
+.dashboard-container .fas:not(.btn .fas), 
+.dashboard-container .far:not(.btn .fas), 
+.dashboard-container .fab:not(.btn .fas), 
+.dashboard-container .fa:not(.btn .fas) {
+    color: #28a745 !important;
+}
+
+/* Keep sidebar icons white */
+.sidebar .fas, 
+.sidebar .far, 
+.sidebar .fab, 
+.sidebar .fa {
+    color: white !important;
+}
+
+/* Keep action card icons green */
+.action-icon .fas,
+.action-icon .far,
+.action-icon .fab,
+.action-icon .fa {
+    color: #28a745 !important;
+}
+
+/* Button icons default color */
+.btn .fas,
+.btn .far,
+.btn .fab,
+.btn .fa {
+    color: rgba(255, 255, 255, 0.9) !important;
+}
+
+/* Calendar button icons - specific override for white background buttons */
+.calendar-controls .btn i,
+.calendar-navigation .btn i {
+    color: #6c757d !important;
+}
+
+/* Calendar button hover states */
+.calendar-controls .btn:hover i,
+.calendar-navigation .btn:hover i,
+.calendar-controls .btn.btn-primary i {
+    color: white !important;
+}
+
+/* Dashboard button icons */
+.dashboard-container .calendar-controls .btn:hover i,
+.dashboard-container .calendar-navigation .btn:hover i {
+    color: white !important;
+}
+
+.dashboard-container .calendar-controls .btn.btn-primary i {
+    color: white !important;
+}
+ 
