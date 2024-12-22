@@ -2,13 +2,6 @@
 
 {% block page_title %}Examinations{% endblock %}
 
-{% block header_actions %}
-<a href="{% url 'secretary_dash:examination_create' %}" class="btn btn-add">
-    <i class="fas fa-stethoscope"></i>
-    <span>New Examination</span>
-</a>
-{% endblock %}
-
 {% block table_content %}
 {% if examinations %}
     <table>

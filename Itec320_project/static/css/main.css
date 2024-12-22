@@ -492,112 +492,57 @@ table tr:hover {
 }
 
 /* Action Column */
-.actions-column {
-    width: 12rem;
-    text-align: right;
-    white-space: nowrap;
+.actions {
+    display: flex !important;
+    gap: 0.25rem !important;
+    justify-content: flex-end !important;
 }
 
-.actions-column .btn,
-.actions-column form {
-    display: inline-flex;
-    align-items: center;
-    margin-left: 0.5rem;
+.actions .btn,
+.actions form {
+    margin: 0 !important;
 }
 
-.actions-column .btn:first-child {
-    margin-left: 0;
-}
-
-/* Small Buttons in Tables */
-.table-container .btn-sm {
-    padding: 0.25rem 0.5rem;
-    font-size: 0.75rem;
-    height: 1.75rem;
-}
-
-.table-container .btn-sm i {
-    font-size: 0.75rem;
-    margin-right: 0.25rem;
-}
-
-/* Mobile Responsive */
-@media (max-width: 768px) {
-    .table-container {
-        margin: 0.5rem 0;
-    }
-
-    table th,
-    table td {
-        padding: 0.5rem;
-    }
-
-    .actions-column {
-        width: 8rem;
-    }
-
-    .actions-column .btn,
-    .actions-column form {
-        display: block;
-        margin: 0.25rem 0;
-        width: 100%;
-    }
-
-    .actions-column .btn:first-child {
-        margin-top: 0;
-    }
-
-    .actions-column .btn:last-child {
-        margin-bottom: 0;
-    }
-
-    .table-container .btn-sm {
-        width: 100%;
-        justify-content: center;
-    }
-}
-
-/* No Data Message */
-.no-data {
-    text-align: center;
-    padding: 2rem;
-    color: var(--text-muted);
-}
-
-.no-data i {
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
-    display: block;
+.actions form {
+    display: inline-flex !important;
 }
 
 /* Status Badges */
 .badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
     display: inline-block;
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.25rem;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: capitalize;
+    text-align: center;
 }
 
-.badge-pending {
-    background-color: var(--warning-light);
-    color: var(--warning-dark);
-}
-
-.badge-confirmed {
-    background-color: var(--success-light);
-    color: var(--success-dark);
+.badge-upcoming {
+    background-color: rgba(25, 118, 210, 0.1);
+    color: #1976d2;
 }
 
 .badge-cancelled {
-    background-color: var(--danger-light);
-    color: var(--danger-dark);
+    background-color: rgba(255, 193, 7, 0.1);
+    color: #856404;
 }
 
 .badge-completed {
-    background-color: var(--info-light);
-    color: var(--info-dark);
+    background-color: rgba(40, 167, 69, 0.1);
+    color: #28a745;
+}
+
+/* Mobile Responsive */
+@media (max-width: 48rem) {
+    .actions {
+        flex-direction: column !important;
+        gap: 0.5rem !important;
+    }
+
+    .actions .btn,
+    .actions form {
+        width: 100% !important;
+    }
 }
 
 /* Button Colors */
@@ -1762,10 +1707,6 @@ table tbody tr:last-child td {
     }
 
     .actions-column {
-        position: sticky;
-        right: 0;
-        background: white;
-        box-shadow: -0.25rem 0 0.5rem rgba(0, 0, 0, 0.1);
         width: auto;
         min-width: 8.5rem;
         padding-right: 0.75rem !important;

@@ -218,37 +218,26 @@ def appointment_detail(request, pk):
 @user_passes_test(lambda u: u.is_superuser or is_secretary(u))
 def appointment_edit(request, pk):
     appointment = get_object_or_404(Appointment, pk=pk)
+    is_reschedule = request.GET.get('reschedule') == 'true'
+    
     if request.method == 'POST':
         form = AppointmentForm(request.POST, instance=appointment)
         if form.is_valid():
-            form.save()
-            messages.success(request, mark_safe(
-                '<div class="message-content">'
-                '<h4>Appointment Updated</h4>'
-                '<p>The appointment has been updated successfully.</p>'
-                '</div>'
-            ))
+            appointment = form.save(commit=False)
+            if is_reschedule:
+                appointment.status = 'upcoming'
+            appointment.save()
+            messages.success(request, 'Appointment updated successfully.')
             return redirect('secretary_dash:appointment_list')
-        else:
-            # Format error messages
-            error_messages = []
-            for field, field_errors in form.errors.items():
-                if field == '__all__':
-                    error_messages.extend(field_errors)
-                else:
-                    error_messages.append(f'<strong>{field}:</strong> {field_errors[0]}')
-            
-            if error_messages:
-                error_html = '<div class="message-content"><h4>Appointment Form Errors</h4><ul>'
-                for error in error_messages:
-                    error_html += f'<li>{error}</li>'
-                error_html += '</ul></div>'
-                messages.error(request, mark_safe(error_html))
     else:
         form = AppointmentForm(instance=appointment)
+        if is_reschedule:
+            messages.info(request, 'Rescheduling cancelled appointment.')
+
     return render(request, 'secretary_dash/common/appointment_form.html', {
         'form': form,
-        'title': 'Edit Appointment'
+        'title': 'Edit Appointment',
+        'is_reschedule': is_reschedule
     })
 
 @login_required
