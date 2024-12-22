@@ -562,12 +562,75 @@ def examination_create(request):
                 appointment.status = 'completed'
                 appointment.save()
             
-            messages.success(request, mark_safe(
-                '<div class="message-content">'
-                '<h4>Examination Created</h4>'
-                '<p>The examination has been created successfully.</p>'
-                '</div>'
-            ))
+            # Prepare and send email to patient
+            try:
+                # Create email content
+                subject = f'Examination Details - {examination.date}'
+                
+                # Build the prescriptions list
+                prescriptions_html = ""
+                for prescription in examination.prescriptions.all():
+                    prescriptions_html += f"""
+                    <div style="margin-bottom: 10px;">
+                        <strong>Medicine:</strong> {prescription.medicine.name}<br>
+                        <strong>Dosage:</strong> {prescription.dosage}<br>
+                        <strong>Duration:</strong> {prescription.duration}<br>
+                        {f'<strong>Notes:</strong> {prescription.notes}<br>' if prescription.notes else ''}
+                    </div>
+                    """
+                
+                # Create HTML message
+                message = f"""
+                <html>
+                <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+                    <h2>Examination Details</h2>
+                    <p>Dear {examination.patient.name},</p>
+                    
+                    <div style="margin: 20px 0;">
+                        <strong>Date:</strong> {examination.date}<br>
+                        <strong>Time:</strong> {examination.time}<br>
+                    </div>
+                    
+                    <div style="margin: 20px 0;">
+                        <h3>Symptoms</h3>
+                        <p>{examination.symptoms}</p>
+                        
+                        <h3>Diagnosis</h3>
+                        <p>{examination.diagnosis}</p>
+                    </div>
+                    
+                    {f'<div style="margin: 20px 0;"><h3>Prescriptions</h3>{prescriptions_html}</div>' if prescriptions_html else ''}
+                    
+                    <p style="margin-top: 20px;">Best regards,<br>Your Doctor</p>
+                </body>
+                </html>
+                """
+                
+                # Send email
+                send_mail(
+                    subject,
+                    '',  # Empty string for plain text version
+                    settings.EMAIL_HOST_USER,
+                    [examination.patient.email],
+                    fail_silently=False,
+                    html_message=message
+                )
+                
+                messages.success(request, mark_safe(
+                    '<div class="message-content">'
+                    '<h4>Examination Created</h4>'
+                    '<p>The examination has been created successfully and an email has been sent to the patient.</p>'
+                    '</div>'
+                ))
+            except Exception as e:
+                logger.error(f"Failed to send examination email: {str(e)}")
+                messages.success(request, mark_safe(
+                    '<div class="message-content">'
+                    '<h4>Examination Created</h4>'
+                    '<p>The examination has been created successfully, but we could not send the email notification.</p>'
+                    '</div>'
+                ))
+            
             return redirect('secretary_dash:examination_list')
         else:
             # Format error messages
