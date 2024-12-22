@@ -158,7 +158,7 @@ LOGGING = {
         'console': {
             'class': 'logging.StreamHandler',
             'formatter': 'verbose',
-            'level': 'DEBUG',
+            'level': 'INFO',
         },
         'file': {
             'class': 'logging.FileHandler',
@@ -170,7 +170,7 @@ LOGGING = {
     'loggers': {
         'django': {
             'handlers': ['console', 'file'],
-            'level': 'DEBUG',
+            'level': 'INFO',
             'propagate': True,
         },
         'django.template': {

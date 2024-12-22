@@ -50,16 +50,17 @@ class AppointmentForm(forms.ModelForm):
         time_str = cleaned_data.get('time')
 
         if date and time_str:
-            # Convert time string to time object
+            # Convert time string to time object without using timezone
+            from datetime import datetime, time
             hour, minute = map(int, time_str.split(':'))
-            time = timezone.now().replace(hour=hour, minute=minute, second=0, microsecond=0).time()
-            cleaned_data['time'] = time
+            time_obj = time(hour=hour, minute=minute)
+            cleaned_data['time'] = time_obj
 
             # Check for busy hours
             busy_hours = BusyHours.objects.filter(
                 date=date,
-                start_time__lte=time,
-                end_time__gt=time
+                start_time__lte=time_obj,
+                end_time__gt=time_obj
             )
             if busy_hours.exists():
                 raise forms.ValidationError("The doctor is not available at this time.")
@@ -67,7 +68,7 @@ class AppointmentForm(forms.ModelForm):
             # Check for existing appointments
             existing_appointments = Appointment.objects.filter(
                 date=date,
-                time=time,
+                time=time_obj,
                 status='upcoming'
             ).exclude(pk=self.instance.pk if self.instance else None)
 

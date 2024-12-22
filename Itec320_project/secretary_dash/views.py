@@ -172,7 +172,19 @@ def appointment_create(request):
         form = AppointmentForm(request.POST)
         if form.is_valid():
             appointment = form.save(commit=False)
-            appointment.created_by = request.user
+            
+            # Handle both doctors and secretaries
+            if request.user.is_superuser:
+                # For doctors, create a Secretary instance if it doesn't exist
+                secretary, created = Secretary.objects.get_or_create(
+                    user=request.user,
+                    defaults={'phone': ''}  # Add a default empty phone number
+                )
+            else:
+                # For secretaries, get their existing Secretary instance
+                secretary = Secretary.objects.get(user=request.user)
+            
+            appointment.created_by = secretary
             appointment.status = 'upcoming'
             appointment.save()
             messages.success(request, mark_safe(
@@ -206,13 +218,33 @@ def appointment_create(request):
                             )
                             messages.error(request, warning_html)
                             continue
+                elif "time slot is already booked" in str(error):
+                    date = form.cleaned_data.get('date')
+                    time = form.cleaned_data.get('time')
+                    if date and time:
+                        existing_appointment = Appointment.objects.filter(
+                            date=date,
+                            time=time,
+                            status='upcoming'
+                        ).first()
+                        if existing_appointment:
+                            warning_html = mark_safe(
+                                '<div class="message-content">'
+                                '<h4>Cannot Schedule Appointment</h4>'
+                                f'<p>This time slot is already booked on {date}</p>'
+                                f'<p><strong>Time:</strong> {time.strftime("%H:%M")}</p>'
+                                f'<p><strong>Patient:</strong> {existing_appointment.patient.name}</p>'
+                                '</div>'
+                            )
+                            messages.error(request, warning_html)
+                            continue
 
             # Format other error messages
             error_messages = []
             for field, errors in form.errors.items():
                 if field == '__all__':
-                    # Skip busy hours error as it's already handled
-                    if not any("doctor is not available" in str(error) for error in errors):
+                    # Skip busy hours and double booking errors as they're already handled
+                    if not any("doctor is not available" in str(error) or "time slot is already booked" in str(error) for error in errors):
                         error_messages.extend(errors)
                 else:
                     error_messages.append(f'<strong>{field}:</strong> {errors[0]}')
