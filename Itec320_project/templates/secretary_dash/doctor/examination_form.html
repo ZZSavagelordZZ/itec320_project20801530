@@ -71,7 +71,7 @@
             {% for prescription_form in prescription_formset %}
                 <div class="prescription-form">
                     {{ prescription_form.id }}
-                    <div style="display: none;">{{ prescription_form.DELETE }}</div>
+                    <div class="hidden">{{ prescription_form.DELETE }}</div>
                     <div class="form-group">
                         <label>Medicine:</label>
                         {{ prescription_form.medicine }}
@@ -124,64 +124,6 @@
         </a>
     </div>
 </form>
-
-<style>
-    .form-section {
-        margin-bottom: 2rem;
-        padding-bottom: 2rem;
-        border-bottom: 1px solid #e2e8f0;
-    }
-
-    .form-section:last-child {
-        border-bottom: none;
-        margin-bottom: 0;
-        padding-bottom: 0;
-    }
-
-    .form-section h3 {
-        color: #2d3436;
-        font-size: 1.25rem;
-        font-weight: 600;
-        margin-bottom: 1.5rem;
-    }
-
-    .prescription-form {
-        background: #f8f9fa;
-        padding: 1.5rem;
-        border-radius: 6px;
-        margin-bottom: 1rem;
-        position: relative;
-    }
-
-    .prescription-form .btn-delete {
-        position: absolute;
-        top: 1rem;
-        right: 1rem;
-        padding: 0.5rem 1rem;
-        background-color: #d32f2f !important;
-        color: white !important;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        transition: background-color 0.2s;
-    }
-
-    .prescription-form .btn-delete:hover {
-        background-color: #b71c1c !important;
-    }
-
-    .prescription-form .btn-delete i {
-        font-size: 1rem;
-    }
-
-    #add-prescription {
-        margin-top: 1rem;
-        
-    }
-</style>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {

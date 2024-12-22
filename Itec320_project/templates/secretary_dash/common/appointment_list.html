@@ -18,21 +18,21 @@
                 <th>Time</th>
                 <th>Patient</th>
                 <th>Status</th>
-                <th class="actions-column">Actions</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
             {% for appointment in appointments %}
                 <tr>
                     <td>{{ appointment.date }}</td>
-                    <td>{{ appointment.time }}</td>
+                    <td>{{ appointment.get_formatted_time }}</td>
                     <td>{{ appointment.patient.name }}</td>
                     <td>
                         <span class="badge badge-{{ appointment.status }}">
                             {{ appointment.status|title }}
                         </span>
                     </td>
-                    <td class="actions-column">
+                    <td class="actions">
                         {% if appointment.status != 'cancelled' %}
                             <a href="{% url 'secretary_dash:appointment_edit' appointment.id %}" class="btn btn-edit btn-sm">
                                 <i class="fas fa-edit"></i>

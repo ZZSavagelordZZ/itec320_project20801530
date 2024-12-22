@@ -44,6 +44,13 @@ class AppointmentForm(forms.ModelForm):
             'date': forms.DateInput(attrs={'type': 'date'}),
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance and self.instance.pk:
+            # Format the time value for the form when editing
+            if self.instance.time:
+                self.initial['time'] = self.instance.time.strftime('%H:%M')
+
     def clean(self):
         cleaned_data = super().clean()
         date = cleaned_data.get('date')
@@ -52,28 +59,31 @@ class AppointmentForm(forms.ModelForm):
         if date and time_str:
             # Convert time string to time object without using timezone
             from datetime import datetime, time
-            hour, minute = map(int, time_str.split(':'))
-            time_obj = time(hour=hour, minute=minute)
-            cleaned_data['time'] = time_obj
+            try:
+                hour, minute = map(int, time_str.split(':'))
+                time_obj = time(hour=hour, minute=minute)
+                cleaned_data['time'] = time_obj
 
-            # Check for busy hours
-            busy_hours = BusyHours.objects.filter(
-                date=date,
-                start_time__lte=time_obj,
-                end_time__gt=time_obj
-            )
-            if busy_hours.exists():
-                raise forms.ValidationError("The doctor is not available at this time.")
+                # Check for busy hours
+                busy_hours = BusyHours.objects.filter(
+                    date=date,
+                    start_time__lte=time_obj,
+                    end_time__gt=time_obj
+                )
+                if busy_hours.exists():
+                    raise forms.ValidationError("The doctor is not available at this time.")
 
-            # Check for existing appointments
-            existing_appointments = Appointment.objects.filter(
-                date=date,
-                time=time_obj,
-                status='upcoming'
-            ).exclude(pk=self.instance.pk if self.instance else None)
+                # Check for existing appointments using exact time comparison
+                existing_appointments = Appointment.objects.filter(
+                    date=date,
+                    time=time_obj,
+                    status='upcoming'
+                ).exclude(pk=self.instance.pk if self.instance else None)
 
-            if existing_appointments.exists():
-                raise forms.ValidationError("This time slot is already booked.")
+                if existing_appointments.exists():
+                    raise forms.ValidationError("This time slot is already booked.")
+            except (ValueError, TypeError):
+                raise forms.ValidationError("Invalid time format")
 
         return cleaned_data
 

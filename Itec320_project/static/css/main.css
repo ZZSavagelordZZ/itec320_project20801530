@@ -10,20 +10,20 @@ body {
 
 /* Sidebar styles */
 .sidebar {
-    width: 250px;
+    width: 15.625rem;
     height: 100vh;
     position: fixed;
     left: 0;
     top: 0;
     background-color: #343a40;
     color: white;
-    padding: 20px 0;
+    padding: 1.25rem 0;
     display: flex;
     flex-direction: column;
 }
 
 .logo {
-    padding: 20px;
+    padding: 1.25rem;
     text-align: center;
     text-decoration: none;
     color: white !important;
@@ -31,8 +31,8 @@ body {
     font-weight: bold;
     display: flex;
     align-items: center;
-    gap: 10px;
-    margin-bottom: 20px;
+    gap: 0.625rem;
+    margin-bottom: 1.25rem;
 }
 
 .logo:hover {
@@ -52,14 +52,14 @@ body {
 }
 
 .nav-links li {
-    margin-bottom: 5px;
+    margin-bottom: 0.3125rem;
 }
 
 .nav-links .btn {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 12px 20px;
+    gap: 0.625rem;
+    padding: 0.75rem 1.25rem;
     color: rgba(255, 255, 255, 0.8);
     text-decoration: none;
     transition: all 0.3s ease;
@@ -78,21 +78,21 @@ body {
 }
 
 .nav-links .btn i {
-    width: 20px;
+    width: 1.25rem;
     text-align: center;
     color: white !important;
 }
 
 .user-menu {
-    padding: 20px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 1.25rem;
+    border-top: 0.0625rem solid rgba(255, 255, 255, 0.1);
 }
 
 .user-menu .btn {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 12px 20px;
+    gap: 0.625rem;
+    padding: 0.75rem 1.25rem;
     color: rgba(255, 255, 255, 0.8);
     text-decoration: none;
     transition: all 0.3s ease;
@@ -102,7 +102,7 @@ body {
     text-align: left;
     cursor: pointer;
     font-size: 1rem;
-    margin-bottom: 5px;
+    margin-bottom: 0.3125rem;
 }
 
 .user-menu .btn:hover {
@@ -116,8 +116,8 @@ body {
 
 /* Main content styles */
 .main-content {
-    margin-left: 250px;
-    padding: 20px;
+    margin-left: 15.625rem;
+    padding: 1.25rem;
     min-height: 100vh;
 }
 
@@ -131,32 +131,32 @@ body {
 /* Stats Grid */
 .stats-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(15.625rem, 1fr));
     gap: 1.5rem;
 }
 
 .stat-card {
     background: white;
     padding: 1.5rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-radius: 0.5rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.1);
     display: flex;
     align-items: center;
     gap: 1rem;
 }
 
 .stat-icon {
-    width: 48px;
-    height: 48px;
+    width: 3rem;
+    height: 3rem;
     background: #f8f9fa;
-    border-radius: 8px;
+    border-radius: 0.5rem;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .stat-icon i {
-    font-size: 24px;
+    font-size: 1.5rem;
     color: #28a745;
 }
 
@@ -177,8 +177,8 @@ body {
 .dashboard-section {
     background: white;
     padding: 1.5rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-radius: 0.5rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.1);
 }
 
 .dashboard-section h2 {
@@ -190,7 +190,7 @@ body {
 /* Quick Actions */
 .quick-actions {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(18.75rem, 1fr));
     gap: 1.5rem;
     margin-top: 1rem;
 }
@@ -198,30 +198,30 @@ body {
 .action-card {
     background: white;
     padding: 1.5rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-radius: 0.5rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.1);
     display: flex;
     align-items: center;
     gap: 1rem;
     text-decoration: none;
     color: inherit;
     transition: all 0.2s ease;
-    border: 1px solid transparent;
+    border: 0.0625rem solid transparent;
 }
 
 .action-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transform: translateY(-0.125rem);
+    box-shadow: 0 0.25rem 0.375rem rgba(0,0,0,0.1);
     border-color: #28a745;
     text-decoration: none;
     color: inherit;
 }
 
 .action-icon {
-    width: 48px;
-    height: 48px;
+    width: 3rem;
+    height: 3rem;
     background: #f8f9fa;
-    border-radius: 8px;
+    border-radius: 0.5rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -280,7 +280,7 @@ body {
 
 #calendar {
     background: white;
-    border-radius: 6px;
+    border-radius: 0.375rem;
     overflow: hidden;
 }
 
@@ -288,9 +288,9 @@ body {
 .calendar-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    gap: 1px;
+    gap: 0.0625rem;
     background: #e9ecef;
-    border: 1px solid #e9ecef;
+    border: 0.0625rem solid #e9ecef;
 }
 
 .calendar-header-cell {
@@ -303,7 +303,7 @@ body {
 
 .calendar-cell {
     background: white;
-    min-height: 100px;
+    min-height: 6.25rem;
     padding: 0.5rem;
     position: relative;
 }
@@ -325,10 +325,10 @@ body {
 /* Week View */
 .week-view {
     display: grid;
-    grid-template-columns: 60px repeat(7, 1fr);
-    gap: 1px;
+    grid-template-columns: 3.75rem repeat(7, 1fr);
+    gap: 0.0625rem;
     background: #e9ecef;
-    border: 1px solid #e9ecef;
+    border: 0.0625rem solid #e9ecef;
 }
 
 .week-header-cell {
@@ -343,20 +343,20 @@ body {
 .day-schedule {
     display: flex;
     flex-direction: column;
-    gap: 1px;
+    gap: 0.0625rem;
     background: #e9ecef;
-    border: 1px solid #e9ecef;
+    border: 0.0625rem solid #e9ecef;
 }
 
 .time-slot {
     display: grid;
-    grid-template-columns: 60px 1fr;
-    min-height: 40px;
+    grid-template-columns: 3.75rem 1fr;
+    min-height: 2.5rem;
     background: white;
 }
 
 .time-slot .time-label {
-    border-right: 1px solid #e9ecef;
+    border-right: 0.0625rem solid #e9ecef;
 }
 
 .time-slot .appointment-preview {
@@ -377,16 +377,16 @@ body {
 .time-slot,
 .appointment-slot {
     background: white;
-    min-height: 40px;
+    min-height: 2.5rem;
     padding: 0.25rem;
 }
 
 /* Appointment Styles */
 .appointment-dot {
-    width: 8px;
-    height: 8px;
+    width: 0.5rem;
+    height: 0.5rem;
     border-radius: 50%;
-    margin: 2px;
+    margin: 0.125rem;
     display: inline-block;
 }
 
@@ -396,8 +396,8 @@ body {
 .appointment-preview {
     font-size: 0.75rem;
     padding: 0.25rem 0.5rem;
-    margin: 2px 0;
-    border-radius: 3px;
+    margin: 0.125rem 0;
+    border-radius: 0.1875rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -417,12 +417,12 @@ body {
 .calendar-controls .btn,
 .calendar-navigation .btn {
     padding: 0.5rem 1rem !important;
-    border: 1px solid #e9ecef !important;
+    border: 0.0625rem solid #e9ecef !important;
     background: white !important;
     color: #6c757d !important;
     font-weight: 500 !important;
     transition: all 0.2s !important;
-    border-radius: 4px !important;
+    border-radius: 0.25rem !important;
 }
 
 .calendar-controls .btn i,
@@ -456,38 +456,52 @@ body {
 }
 
 /* Table Styles */
-.table {
+.table-container {
     width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    background: white;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    margin-bottom: 2rem;
+    overflow-x: auto;
+    margin: 1rem 0;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
 }
 
-.table th {
-    background-color: #f8f9fa;
-    font-weight: 600;
-    color: #2d3436;
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: var(--white);
 }
 
-.table th, .table td {
-    padding: 1rem;
+table th,
+table td {
+    padding: 0.75rem 1rem;
     text-align: left;
-    border-bottom: 1px solid #e9ecef;
-    vertical-align: middle;
+    border-bottom: 0.0625rem solid var(--border-color);
 }
 
-/* Actions Column */
+table th {
+    background-color: var(--light-bg);
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+table tr:last-child td {
+    border-bottom: none;
+}
+
+table tr:hover {
+    background-color: var(--hover-bg);
+}
+
+/* Action Column */
 .actions-column {
-    width: 200px;
-    text-align: right !important;
+    width: 12rem;
+    text-align: right;
     white-space: nowrap;
 }
 
-.actions-column .btn {
+.actions-column .btn,
+.actions-column form {
+    display: inline-flex;
+    align-items: center;
     margin-left: 0.5rem;
 }
 
@@ -495,7 +509,98 @@ body {
     margin-left: 0;
 }
 
-/* Button colors */
+/* Small Buttons in Tables */
+.table-container .btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    height: 1.75rem;
+}
+
+.table-container .btn-sm i {
+    font-size: 0.75rem;
+    margin-right: 0.25rem;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .table-container {
+        margin: 0.5rem 0;
+    }
+
+    table th,
+    table td {
+        padding: 0.5rem;
+    }
+
+    .actions-column {
+        width: 8rem;
+    }
+
+    .actions-column .btn,
+    .actions-column form {
+        display: block;
+        margin: 0.25rem 0;
+        width: 100%;
+    }
+
+    .actions-column .btn:first-child {
+        margin-top: 0;
+    }
+
+    .actions-column .btn:last-child {
+        margin-bottom: 0;
+    }
+
+    .table-container .btn-sm {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* No Data Message */
+.no-data {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-muted);
+}
+
+.no-data i {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+/* Status Badges */
+.badge {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.badge-pending {
+    background-color: var(--warning-light);
+    color: var(--warning-dark);
+}
+
+.badge-confirmed {
+    background-color: var(--success-light);
+    color: var(--success-dark);
+}
+
+.badge-cancelled {
+    background-color: var(--danger-light);
+    color: var(--danger-dark);
+}
+
+.badge-completed {
+    background-color: var(--info-light);
+    color: var(--info-dark);
+}
+
+/* Button Colors */
 .btn-delete {
     background-color: #dc3545 !important;
     color: white !important;
@@ -518,15 +623,15 @@ body {
 .btn {
     display: inline-flex !important;
     align-items: center !important;
-    gap: 8px !important;
-    padding: 8px 16px !important;
-    border-radius: 4px !important;
+    gap: 0.5rem !important;
+    padding: 0.5rem 1rem !important;
+    border-radius: 0.25rem !important;
     border: none !important;
     cursor: pointer !important;
     font-weight: 500 !important;
     transition: all 0.2s ease !important;
     text-decoration: none !important;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1) !important;
 }
 
 /* Form Save Button */
@@ -544,19 +649,14 @@ form:not(.user-menu form) input[type="submit"]:not(.btn-cancel):not(.btn-delete)
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
+@media (max-width: 48rem) {
     .sidebar {
-        width: 70px;
-    }
-
-    .sidebar .logo span,
-    .nav-links .btn span {
-        display: none;
+        width: 4.375rem;
     }
 
     .main-content {
-        margin-left: 70px;
-        width: calc(100% - 70px);
+        margin-left: 4.375rem;
+        width: calc(100% - 4.375rem);
     }
 
     .user-menu {
@@ -635,8 +735,8 @@ form:not(.user-menu form) input[type="submit"]:not(.btn-cancel):not(.btn-delete)
 .detail-section {
     background: white;
     padding: 1.5rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-radius: 0.5rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.1);
     margin-bottom: 1.5rem;
 }
 
@@ -648,7 +748,7 @@ form:not(.user-menu form) input[type="submit"]:not(.btn-cancel):not(.btn-delete)
 
 .info-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(15.625rem, 1fr));
     gap: 1.5rem;
 }
 
@@ -677,7 +777,7 @@ form:not(.user-menu form) input[type="submit"]:not(.btn-cancel):not(.btn-delete)
 /* Examination Card */
 .examination-card {
     background: #f8f9fa;
-    border-radius: 8px;
+    border-radius: 0.5rem;
     padding: 1.5rem;
     margin-bottom: 1rem;
 }
@@ -706,7 +806,7 @@ form:not(.user-menu form) input[type="submit"]:not(.btn-cancel):not(.btn-delete)
 
 .examination-card .prescription {
     background: white;
-    border-radius: 6px;
+    border-radius: 0.375rem;
     padding: 1rem;
     margin-bottom: 1rem;
 }
@@ -727,16 +827,16 @@ form:not(.user-menu form) input[type="submit"]:not(.btn-cancel):not(.btn-delete)
 .calendar-side {
     background: white;
     padding: 1.5rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-radius: 0.5rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.1);
 }
 
 .appointments-side {
     background: white;
     padding: 1.5rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    max-height: 600px;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.1);
+    max-height: 37.5rem;
     overflow-y: auto;
 }
 
@@ -752,14 +852,14 @@ form:not(.user-menu form) input[type="submit"]:not(.btn-cancel):not(.btn-delete)
     gap: 1rem;
     padding: 1rem;
     background: #f8f9fa;
-    border-radius: 8px;
-    border-left: 4px solid #28a745;
+    border-radius: 0.5rem;
+    border-left: 0.25rem solid #28a745;
     transition: all 0.2s ease;
 }
 
 .appointment-item:hover {
-    transform: translateX(4px);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transform: translateX(0.25rem);
+    box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.1);
 }
 
 .appointment-item.appointment-cancelled {
@@ -768,7 +868,7 @@ form:not(.user-menu form) input[type="submit"]:not(.btn-cancel):not(.btn-delete)
 }
 
 .appointment-time {
-    min-width: 80px;
+    min-width: 5rem;
     color: #6c757d;
     font-weight: 500;
 }
@@ -809,7 +909,7 @@ form:not(.user-menu form) input[type="submit"]:not(.btn-cancel):not(.btn-delete)
     align-items: center;
     gap: 0.25rem;
     padding: 0.25rem 0.5rem;
-    border-radius: 4px;
+    border-radius: 0.25rem;
     font-size: 0.75rem;
     font-weight: 500;
 }
@@ -839,5 +939,1026 @@ form:not(.user-menu form) input[type="submit"]:not(.btn-cancel):not(.btn-delete)
 .no-appointments p {
     margin: 0;
     font-size: 0.875rem;
+}
+
+/* Message Styles */
+.messages-container {
+    margin: 1rem auto 2rem;
+    max-width: 37.5rem;
+    padding: 0 1rem;
+    animation: slide-down 0.3s ease-out;
+}
+
+@keyframes slide-down {
+    from {
+        transform: translateY(-1.25rem);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.message {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+    background: white;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
+}
+
+.message.error {
+    background: #fee2e2;
+    border: 0.0625rem solid #ef4444;
+}
+
+.message.success {
+    background: #dcfce7;
+    border: 0.0625rem solid #22c55e;
+}
+
+.message.warning {
+    background: #fef3c7;
+    border: 0.0625rem solid #f59e0b;
+}
+
+.message.info {
+    background: #e0f2fe;
+    border: 0.0625rem solid #0ea5e9;
+}
+
+.message-icon {
+    font-size: 1.5rem;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.message.error .message-icon {
+    color: #dc2626;
+}
+
+.message.success .message-icon {
+    color: #16a34a;
+}
+
+.message.warning .message-icon {
+    color: #d97706;
+}
+
+.message.info .message-icon {
+    color: #0284c7;
+}
+
+.message-content {
+    flex: 1;
+    font-size: 0.95rem;
+}
+
+.message-content h4 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.message-content p {
+    margin: 0;
+    line-height: 1.5;
+}
+
+.message-content ul {
+    margin: 0.5rem 0 0 0;
+    padding-left: 1.5rem;
+}
+
+.message-content li {
+    margin-bottom: 0.25rem;
+}
+
+.message-content li:last-child {
+    margin-bottom: 0;
+}
+
+/* Authentication Styles */
+.login-container {
+    background: white;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.125rem 0.5rem rgba(0,0,0,0.1);
+    width: 18.75rem;
+}
+
+.login-container h1 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 0.0625rem solid #ddd;
+    border-radius: 0.25rem;
+}
+
+.btn-submit {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 0.25rem;
+    cursor: pointer;
+}
+
+.alert {
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border-radius: 0.25rem;
+    text-align: center;
+}
+
+.alert-error {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.form-control:focus {
+    border-color: #28a745;
+    box-shadow: 0 0 0 0.125rem rgba(40, 167, 69, 0.25);
+}
+
+.auth-container {
+    border-color: #28a745;
+}
+
+/* Login Page Styles */
+.login-page {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f8f9fa;
+}
+
+.form-container {
+    width: 100%;
+    max-width: 25rem;
+}
+
+.form-container h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #333;
+}
+
+/* Examination Form Styles */
+.form-section {
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 0.0625rem solid #e2e8f0;
+}
+
+.form-section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.form-section h3 {
+    color: #2d3436;
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+}
+
+.prescription-form {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 0.375rem;
+    margin-bottom: 1rem;
+    position: relative;
+}
+
+.prescription-form .btn-delete {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    padding: 0.5rem 1rem;
+    background-color: #d32f2f !important;
+    color: white !important;
+    border: none;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: background-color 0.2s;
+}
+
+.prescription-form .btn-delete:hover {
+    background-color: #b71c1c !important;
+}
+
+.prescription-form .btn-delete i {
+    font-size: 1rem;
+}
+
+#add-prescription {
+    margin-top: 1rem;
+}
+
+/* Form Styles */
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group.required-field label::after {
+    content: "*";
+    color: #dc3545;
+    margin-left: 0.25rem;
+}
+
+.form-group.has-error input,
+.form-group.has-error select,
+.form-group.has-error textarea {
+    border-color: #dc3545;
+}
+
+.form-group .error {
+    color: #dc3545;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+.form-group .help-text {
+    color: #6c757d;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+/* Info Grid */
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15.625rem, 1fr));
+    gap: 1.5rem;
+}
+
+/* Hidden Helper */
+.hidden {
+    display: none;
+}
+
+/* Password Reset and Auth Pages */
+.auth-page {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f8f9fa;
+}
+
+.auth-form-container {
+    width: 100%;
+    max-width: 25rem;
+}
+
+.auth-form-container h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #333;
+}
+
+.auth-form-container form {
+    width: 100%;
+}
+
+.auth-form-actions {
+    justify-content: center;
+}
+
+/* Logout Page */
+.logout-container {
+    max-width: 25rem;
+    margin: 2rem auto;
+    padding: 2rem;
+    border: 0.0625rem solid #ddd;
+    border-radius: 0.5rem;
+    background-color: white;
+    text-align: center;
+    box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.1);
+}
+
+.logout-container h1 {
+    color: #2d3436;
+    margin-bottom: 1rem;
+}
+
+.logout-container p {
+    color: #636e72;
+    margin-bottom: 1.5rem;
+}
+
+/* Auth Button Styles */
+.btn-auth {
+    display: inline-block;
+    padding: 0.5rem 1.5rem;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 0.25rem;
+    transition: background-color 0.3s;
+}
+
+.btn-auth:hover {
+    background-color: #0056b3;
+}
+
+/* Form Feedback */
+.invalid-feedback {
+    display: block;
+    color: #dc3545;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+/* Text Utilities */
+.text-center {
+    text-align: center;
+}
+
+.mt-3 {
+    margin-top: 1rem;
+}
+
+.mb-3 {
+    margin-bottom: 1rem;
+}
+
+.mb-4 {
+    margin-bottom: 1.5rem;
+}
+
+.d-grid {
+    display: grid;
+}
+
+.d-block {
+    display: block;
+}
+
+/* Doctor Dashboard Styles */
+.dashboard-container {
+    padding: 2rem;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15.625rem, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background: white;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
+}
+
+.stat-icon {
+    width: 3rem;
+    height: 3rem;
+    background: #e3f2fd;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #1976d2;
+    font-size: 1.5rem;
+}
+
+.stat-content h3 {
+    margin: 0;
+    font-size: 0.875rem;
+    color: #64748b;
+}
+
+.stat-content .stat-number {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.calendar-appointments-container {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+    background: white;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
+}
+
+.appointments-side h2 {
+    margin: 0 0 1rem 0;
+    font-size: 1.25rem;
+}
+
+.todays-appointments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.appointment-item {
+    background: #f8fafc;
+    border-radius: 0.375rem;
+    padding: 1rem;
+    display: flex;
+    gap: 1rem;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.2s ease;
+}
+
+.appointment-item:hover {
+    transform: translateY(-0.125rem);
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
+    border: 0.0625rem solid #1976d2;
+}
+
+.appointment-item.appointment-cancelled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.appointment-time {
+    min-width: 5rem;
+    color: #64748b;
+}
+
+.appointment-details {
+    flex: 1;
+}
+
+.appointment-details h4 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.appointment-details p {
+    margin: 0;
+    color: #64748b;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.appointment-status {
+    margin-top: 0.5rem;
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 624.9375rem;
+    font-size: 0.75rem;
+}
+
+.status-completed {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.status-upcoming {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+.status-cancelled {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+/* Appointment Card Styles */
+.appointment-card {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    background: white;
+    border: 0.0625rem solid #e2e8f0;
+    border-radius: 0.5rem;
+    margin-bottom: 0.5rem;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.2s ease;
+}
+
+.appointment-card:hover {
+    transform: translateY(-0.125rem);
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
+    border-color: #1976d2;
+}
+
+.appointment-time {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1976d2;
+    min-width: 5rem;
+}
+
+.appointment-details {
+    flex: 1;
+    margin: 0 1rem;
+}
+
+.appointment-details h3 {
+    margin: 0;
+    font-size: 1rem;
+    color: #2d3436;
+}
+
+.appointment-details p {
+    margin: 0.25rem 0 0 0;
+    font-size: 0.875rem;
+    color: #64748b;
+}
+
+.appointment-status {
+    min-width: 6.25rem;
+    text-align: right;
+}
+
+.status {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 624.9375rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.status.active {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.status.cancelled {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.no-appointments {
+    text-align: center;
+    padding: 2rem;
+    background: #f8fafc;
+    border-radius: 0.5rem;
+    color: #64748b;
+}
+
+.no-appointments i {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.no-appointments p {
+    margin: 0;
+}
+
+/* Secretary Dashboard Styles */
+.container {
+    padding: 1.25rem;
+    max-width: 75rem;
+    margin: 0 auto;
+}
+
+.stats-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15.625rem, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 1.875rem;
+}
+
+.stat-card {
+    background: white;
+    border-radius: 0.5rem;
+    padding: 1.25rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 0.9375rem;
+}
+
+.stat-icon {
+    width: 3.125rem;
+    height: 3.125rem;
+    background: #16a34a;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.stat-icon i {
+    font-size: 1.5rem;
+    color: white;
+}
+
+.stat-content h3 {
+    margin: 0;
+    font-size: 0.875rem;
+    color: #4b5563;
+}
+
+.stat-content p {
+    margin: 0.3125rem 0 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #111827;
+}
+
+.quick-actions {
+    background: white;
+    border-radius: 0.5rem;
+    padding: 1.25rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
+    margin-bottom: 1.875rem;
+}
+
+.quick-actions h2 {
+    margin: 0 0 1.25rem;
+    font-size: 1.25rem;
+    color: #111827;
+}
+
+.action-buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(12.5rem, 1fr));
+    gap: 0.9375rem;
+}
+
+.action-button {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 0.9375rem;
+    background: #f3f4f6;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    color: #374151;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.action-button:hover {
+    background: #e5e7eb;
+    transform: translateY(-0.125rem);
+}
+
+.action-button i {
+    font-size: 1.25rem;
+    color: #16a34a;
+}
+
+@media (max-width: 48rem) {
+    .stats-section {
+        grid-template-columns: 1fr;
+    }
+
+    .action-buttons {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Table Base Styles */
+.table-container {
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
+    padding: 1.25rem;
+    overflow-x: auto;
+    width: 100%;
+}
+
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-bottom: 1.25rem;
+}
+
+table th {
+    background-color: #f8f9fa;
+    color: #2d3436;
+    font-weight: 600;
+    padding: 1rem 0.75rem;
+    text-align: left;
+    border-bottom: 0.0625rem solid #e9ecef;
+    white-space: nowrap;
+}
+
+table td {
+    padding: 1rem 0.75rem;
+    border-bottom: 0.0625rem solid #e9ecef;
+    vertical-align: middle;
+}
+
+table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Table Actions Column - Fixed Width for Consistent Layout */
+.actions-column {
+    width: 12rem;
+    text-align: right;
+    white-space: nowrap;
+    padding-right: 1rem !important;
+}
+
+.actions-column .btn,
+.actions-column form {
+    display: inline-flex !important;
+    vertical-align: middle !important;
+    margin-left: 0.25rem !important;
+}
+
+.actions-column .btn:first-child {
+    margin-left: 0 !important;
+}
+
+/* Table Button Styles - Optimized for Space */
+.table-container .btn-sm {
+    padding: 0.25rem 0.5rem !important;
+    font-size: 0.75rem !important;
+    min-width: 2.5rem !important;
+    height: 1.75rem !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0.25rem !important;
+    margin: 0 !important;
+}
+
+.table-container .btn-sm i {
+    font-size: 0.75rem !important;
+    margin-right: 0.25rem !important;
+}
+
+/* Busy Hours and Appointments Table Specific Styles */
+.busy-hours-table,
+.appointments-table {
+    min-width: 40rem; /* Ensures minimum width for content */
+}
+
+.busy-hours-table th,
+.appointments-table th {
+    white-space: nowrap;
+    padding: 0.75rem !important;
+}
+
+.busy-hours-table td,
+.appointments-table td {
+    padding: 0.75rem !important;
+    vertical-align: middle;
+}
+
+/* Table Mobile Responsive */
+@media (max-width: 48rem) {
+    .table-container {
+        margin: 0 -1rem;
+        padding: 0.75rem;
+        border-radius: 0;
+    }
+
+    .actions-column {
+        position: sticky;
+        right: 0;
+        background: white;
+        box-shadow: -0.25rem 0 0.5rem rgba(0, 0, 0, 0.1);
+        width: auto;
+        min-width: 8.5rem;
+        padding-right: 0.75rem !important;
+    }
+
+    .actions-column .btn,
+    .actions-column form {
+        display: inline-flex !important;
+        margin: 0 0 0 0.25rem !important;
+    }
+
+    .table-container .btn-sm {
+        padding: 0.25rem !important;
+        min-width: 2rem !important;
+        height: 1.5rem !important;
+    }
+
+    .table-container .btn-sm span {
+        display: none !important;
+    }
+
+    .table-container .btn-sm i {
+        margin: 0 !important;
+        font-size: 0.75rem !important;
+    }
+
+    /* Keep buttons horizontal on mobile */
+    .actions-column .btn,
+    .actions-column form {
+        display: inline-flex !important;
+        width: auto !important;
+    }
+
+    /* Ensure text cells don't wrap unnecessarily */
+    .busy-hours-table td,
+    .appointments-table td {
+        white-space: nowrap;
+    }
+
+    /* Add horizontal scroll indicator */
+    .table-container::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 3rem;
+        height: 100%;
+        background: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.1));
+        pointer-events: none;
+    }
+}
+
+/* Button Colors and Styles */
+.btn-primary {
+    background-color: #1976d2 !important;
+    color: white !important;
+}
+
+.btn-primary:hover {
+    background-color: #1565c0 !important;
+}
+
+.btn-success {
+    background-color: #28a745 !important;
+    color: white !important;
+}
+
+.btn-success:hover {
+    background-color: #218838 !important;
+}
+
+.btn-danger {
+    background-color: #dc3545 !important;
+    color: white !important;
+}
+
+.btn-danger:hover {
+    background-color: #c82333 !important;
+}
+
+.btn-warning {
+    background-color: #ffc107 !important;
+    color: #212529 !important;
+}
+
+.btn-warning:hover {
+    background-color: #e0a800 !important;
+}
+
+.btn-info {
+    background-color: #17a2b8 !important;
+    color: white !important;
+}
+
+.btn-info:hover {
+    background-color: #138496 !important;
+}
+
+.btn-edit {
+    background-color: #f57c00 !important;
+    color: white !important;
+}
+
+.btn-edit:hover {
+    background-color: #ef6c00 !important;
+}
+
+.btn-add {
+    background-color: #2e7d32 !important;
+    color: white !important;
+}
+
+.btn-add:hover {
+    background-color: #1b5e20 !important;
+}
+
+.btn-view {
+    background-color: #1976d2 !important;
+    color: white !important;
+}
+
+.btn-view:hover {
+    background-color: #1565c0 !important;
+}
+
+.btn-delete {
+    background-color: #d32f2f !important;
+    color: white !important;
+}
+
+.btn-delete:hover {
+    background-color: #c62828 !important;
+}
+
+.btn-cancel {
+    background-color: #fbc02d !important;
+    color: #000 !important;
+}
+
+.btn-cancel:hover {
+    background-color: #f9a825 !important;
+    color: #000 !important;
+}
+
+/* Global Button Base Style */
+.btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+    padding: 0.5rem 1rem !important;
+    border-radius: 0.25rem !important;
+    border: none !important;
+    cursor: pointer !important;
+    font-weight: 500 !important;
+    transition: all 0.2s ease !important;
+    text-decoration: none !important;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1) !important;
+}
+
+.btn i {
+    font-size: 0.875rem !important;
+}
+
+.btn:hover {
+    transform: translateY(-0.0625rem) !important;
+    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Small Button Variant */
+.btn-sm {
+    padding: 0.375rem 0.75rem !important;
+    font-size: 0.875rem !important;
+    min-width: 4rem !important;
+}
+
+.btn-sm i {
+    font-size: 0.875rem !important;
+    margin-right: 0.25rem !important;
+}
+
+/* Mobile Responsive Button Styles */
+@media (max-width: 48rem) {
+    .btn-sm {
+        padding: 0.375rem 0.5rem !important;
+        min-width: 2.5rem !important;
+    }
+
+    .btn-sm span {
+        display: none !important;
+    }
+
+    .btn-sm i {
+        margin-right: 0 !important;
+    }
 }
  

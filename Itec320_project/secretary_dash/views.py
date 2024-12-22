@@ -195,59 +195,13 @@ def appointment_create(request):
             ))
             return redirect('secretary_dash:appointment_list')
         else:
-            # Check specifically for busy hours error
-            errors = form.errors.get('__all__', [])
-            for error in errors:
-                if "doctor is not available" in str(error):
-                    date = form.cleaned_data.get('date')
-                    time = form.cleaned_data.get('time')
-                    if date and time:
-                        busy_hours = BusyHours.objects.filter(
-                            date=date,
-                            start_time__lte=time,
-                            end_time__gt=time
-                        ).first()
-                        if busy_hours:
-                            warning_html = mark_safe(
-                                '<div class="message-content">'
-                                '<h4>Cannot Schedule Appointment</h4>'
-                                f'<p>The doctor is busy on {busy_hours.date}</p>'
-                                f'<p><strong>Time:</strong> {busy_hours.start_time.strftime("%H:%M")} to {busy_hours.end_time.strftime("%H:%M")}</p>'
-                                f'<p><strong>Reason:</strong> {busy_hours.reason}</p>'
-                                '</div>'
-                            )
-                            messages.error(request, warning_html)
-                            continue
-                elif "time slot is already booked" in str(error):
-                    date = form.cleaned_data.get('date')
-                    time = form.cleaned_data.get('time')
-                    if date and time:
-                        existing_appointment = Appointment.objects.filter(
-                            date=date,
-                            time=time,
-                            status='upcoming'
-                        ).first()
-                        if existing_appointment:
-                            warning_html = mark_safe(
-                                '<div class="message-content">'
-                                '<h4>Cannot Schedule Appointment</h4>'
-                                f'<p>This time slot is already booked on {date}</p>'
-                                f'<p><strong>Time:</strong> {time.strftime("%H:%M")}</p>'
-                                f'<p><strong>Patient:</strong> {existing_appointment.patient.name}</p>'
-                                '</div>'
-                            )
-                            messages.error(request, warning_html)
-                            continue
-
-            # Format other error messages
+            # Format error messages
             error_messages = []
-            for field, errors in form.errors.items():
+            for field, field_errors in form.errors.items():
                 if field == '__all__':
-                    # Skip busy hours and double booking errors as they're already handled
-                    if not any("doctor is not available" in str(error) or "time slot is already booked" in str(error) for error in errors):
-                        error_messages.extend(errors)
+                    error_messages.extend(field_errors)
                 else:
-                    error_messages.append(f'<strong>{field}:</strong> {errors[0]}')
+                    error_messages.append(f'<strong>{field}:</strong> {field_errors[0]}')
             
             if error_messages:
                 error_html = '<div class="message-content"><h4>Appointment Form Errors</h4><ul>'
@@ -280,11 +234,34 @@ def appointment_edit(request, pk):
         form = AppointmentForm(request.POST, instance=appointment)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Appointment updated successfully!')
+            messages.success(request, mark_safe(
+                '<div class="message-content">'
+                '<h4>Appointment Updated</h4>'
+                '<p>The appointment has been updated successfully.</p>'
+                '</div>'
+            ))
             return redirect('secretary_dash:appointment_list')
+        else:
+            # Format error messages
+            error_messages = []
+            for field, field_errors in form.errors.items():
+                if field == '__all__':
+                    error_messages.extend(field_errors)
+                else:
+                    error_messages.append(f'<strong>{field}:</strong> {field_errors[0]}')
+            
+            if error_messages:
+                error_html = '<div class="message-content"><h4>Appointment Form Errors</h4><ul>'
+                for error in error_messages:
+                    error_html += f'<li>{error}</li>'
+                error_html += '</ul></div>'
+                messages.error(request, mark_safe(error_html))
     else:
         form = AppointmentForm(instance=appointment)
-    return render(request, 'secretary_dash/common/appointment_form.html', {'form': form, 'title': 'Edit Appointment'})
+    return render(request, 'secretary_dash/common/appointment_form.html', {
+        'form': form,
+        'title': 'Edit Appointment'
+    })
 
 @login_required
 @user_passes_test(lambda u: u.is_superuser or is_secretary(u))

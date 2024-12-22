@@ -16,7 +16,6 @@
             <tr>
                 <th>Date</th>
                 <th>Patient</th>
-                <th>Status</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -25,11 +24,6 @@
                 <tr>
                     <td>{{ examination.date }}</td>
                     <td>{{ examination.patient.name }}</td>
-                    <td>
-                        <span class="badge badge-{% if examination.is_completed %}success{% else %}warning{% endif %}">
-                            {% if examination.is_completed %}Completed{% else %}Pending{% endif %}
-                        </span>
-                    </td>
                     <td class="actions">
                         <a href="{% url 'secretary_dash:examination_detail' examination.id %}" class="btn btn-view btn-sm">
                             <i class="fas fa-eye"></i>

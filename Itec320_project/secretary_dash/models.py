@@ -54,8 +54,12 @@ class Appointment(models.Model):
         
         super().save(*args, **kwargs)
 
+    def get_formatted_time(self):
+        """Return time in 24-hour format"""
+        return self.time.strftime('%H:%M')
+
     def __str__(self):
-        return f"{self.patient} - {self.date} {self.time}"
+        return f"{self.patient} - {self.date} {self.get_formatted_time()}"
 
     class Meta:
         ordering = ['date', 'time']
