@@ -118,6 +118,10 @@
     </style>
 </head>
 <body>
+    <button id="sidebar-toggle" class="sidebar-toggle">
+        <i class="fas fa-bars"></i>
+    </button>
+    
     {% if messages %}
         <div class="messages-container">
             {% for message in messages %}
@@ -142,5 +146,21 @@
 
     <!-- Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('sidebar-toggle').addEventListener('click', function() {
+            document.body.classList.toggle('sidebar-open');
+        });
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            if (window.innerWidth <= 768) {
+                const sidebar = document.querySelector('.sidebar');
+                const toggle = document.getElementById('sidebar-toggle');
+                if (!sidebar.contains(event.target) && !toggle.contains(event.target)) {
+                    document.body.classList.remove('sidebar-open');
+                }
+            }
+        });
+    </script>
 </body>
 </html> 

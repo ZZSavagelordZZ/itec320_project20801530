@@ -369,6 +369,11 @@ let currentView = 'month';
 const appointments = {{ appointments|safe }};
 const busyHours = {{ busy_hours|safe }};
 
+// Add function to check if device is mobile
+function isMobileDevice() {
+    return window.innerWidth <= 768;
+}
+
 // Helper functions for consistent date handling
 function isSameDay(date1, date2) {
     return date1.getFullYear() === date2.getFullYear() &&
@@ -429,13 +434,32 @@ function renderBusyBlock() {
 }
 
 function initializeCalendar() {
+    // Set initial view based on device
+    if (isMobileDevice()) {
+        currentView = 'day';
+    }
     updateCalendar();
     updateCurrentPeriod();
     setActiveViewButton();
 }
 
+// Add resize listener to handle orientation changes
+window.addEventListener('resize', function() {
+    if (isMobileDevice() && currentView !== 'day') {
+        currentView = 'day';
+        updateCalendar();
+        updateCurrentPeriod();
+        setActiveViewButton();
+    }
+});
+
 function changeView(view) {
-    currentView = view;
+    // Prevent changing view on mobile
+    if (isMobileDevice()) {
+        currentView = 'day';
+    } else {
+        currentView = view;
+    }
     updateCalendar();
     updateCurrentPeriod();
     setActiveViewButton();
