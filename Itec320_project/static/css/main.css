@@ -1961,4 +1961,20 @@ table tbody tr:last-child td {
         margin-right: 0 !important;
     }
 }
+
+.appointment-item.appointment-completed {
+    opacity: 0.7;
+    cursor: not-allowed;
+    pointer-events: none;
+    background-color: #f0f9f4;
+    border-left: 0.25rem solid #16a34a;
+}
+
+.appointment-item.appointment-cancelled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    pointer-events: none;
+    background-color: #fff8e1;
+    border-left: 0.25rem solid #fbc02d;
+}
  

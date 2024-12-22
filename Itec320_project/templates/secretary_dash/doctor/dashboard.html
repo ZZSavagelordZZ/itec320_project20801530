@@ -54,10 +54,10 @@
             <h2>Today's Appointments</h2>
             <div class="todays-appointments-list">
                 {% for appointment in today_appointments %}
-                    {% if appointment.status != 'cancelled' %}
-                        <a href="{% url 'secretary_dash:examination_create' %}?appointment={{ appointment.id }}" class="appointment-item">
+                    {% if appointment.status == 'completed' or appointment.status == 'cancelled' %}
+                        <div class="appointment-item {% if appointment.status == 'cancelled' %}appointment-cancelled{% endif %} {% if appointment.status == 'completed' %}appointment-completed{% endif %}">
                     {% else %}
-                        <div class="appointment-item appointment-cancelled">
+                        <a href="{% url 'secretary_dash:examination_create' %}?appointment={{ appointment.id }}" class="appointment-item">
                     {% endif %}
                         <div class="appointment-time">
                             <i class="far fa-clock"></i>
@@ -90,10 +90,10 @@
                                 {% endif %}
                             </div>
                         </div>
-                    {% if appointment.status != 'cancelled' %}
-                        </a>
-                    {% else %}
+                    {% if appointment.status == 'completed' or appointment.status == 'cancelled' %}
                         </div>
+                    {% else %}
+                        </a>
                     {% endif %}
                 {% empty %}
                     <div class="no-appointments">
