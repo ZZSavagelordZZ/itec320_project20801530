@@ -62,17 +62,6 @@
                 <div class="error">{{ form.diagnosis.errors }}</div>
             {% endif %}
         </div>
-
-        <div class="form-group {% if form.treatment.field.required %}required-field{% endif %} {% if form.treatment.errors %}has-error{% endif %}">
-            <label for="{{ form.treatment.id_for_label }}">Treatment:</label>
-            {{ form.treatment }}
-            {% if form.treatment.help_text %}
-                <div class="help-text">{{ form.treatment.help_text }}</div>
-            {% endif %}
-            {% if form.treatment.errors %}
-                <div class="error">{{ form.treatment.errors }}</div>
-            {% endif %}
-        </div>
     </div>
 
     <div class="form-section">
@@ -81,6 +70,8 @@
         <div id="prescriptions">
             {% for prescription_form in prescription_formset %}
                 <div class="prescription-form">
+                    {{ prescription_form.id }}
+                    <div style="display: none;">{{ prescription_form.DELETE }}</div>
                     <div class="form-group">
                         <label>Medicine:</label>
                         {{ prescription_form.medicine }}
@@ -195,7 +186,8 @@
 document.addEventListener('DOMContentLoaded', function() {
     const addButton = document.getElementById('add-prescription');
     const prescriptionsContainer = document.getElementById('prescriptions');
-    const totalForms = document.getElementById('id_prescription_set-TOTAL_FORMS');
+    const totalForms = document.getElementById('id_prescriptions-TOTAL_FORMS');
+    const initialForms = document.getElementById('id_prescriptions-INITIAL_FORMS');
 
     // Add new prescription form
     addButton.addEventListener('click', function() {
@@ -203,11 +195,13 @@ document.addEventListener('DOMContentLoaded', function() {
         const template = prescriptionsContainer.children[0].cloneNode(true);
         
         // Update form index
-        template.innerHTML = template.innerHTML.replace(/-\d+-/g, `-${formCount}-`);
+        template.innerHTML = template.innerHTML.replace(/prescriptions-\d+-/g, `prescriptions-${formCount}-`);
         
         // Clear form values
         template.querySelectorAll('input, select, textarea').forEach(input => {
-            input.value = '';
+            if (input.type !== 'hidden' || !input.name.endsWith('-id')) {
+                input.value = '';
+            }
         });
         
         prescriptionsContainer.appendChild(template);

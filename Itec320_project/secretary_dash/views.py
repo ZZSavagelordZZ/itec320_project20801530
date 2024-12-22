@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.contrib.auth import logout, authenticate, login, get_user_model
 from django.forms import inlineformset_factory
+from django.utils.safestring import mark_safe
 from .models import Patient, Appointment, Secretary, Medicine, Examination, Prescription, BusyHours
 from .forms import (
     PatientForm, AppointmentForm, MedicineForm, 
@@ -119,8 +120,30 @@ def patient_edit(request, pk):
 @user_passes_test(is_staff)
 def patient_detail(request, pk):
     patient = get_object_or_404(Patient, pk=pk)
+    
+    # Get all examinations ordered by date and time
+    all_examinations = Examination.objects.filter(
+        patient=patient
+    ).order_by('-date', '-time')
+    
+    # Get recent examinations (last 5)
+    recent_examinations = all_examinations[:5]
+    
+    # Get examination history (excluding recent examinations)
+    examination_history = all_examinations[5:] if len(all_examinations) > 5 else []
+    
+    # Get upcoming appointments
+    upcoming_appointments = Appointment.objects.filter(
+        patient=patient,
+        date__gte=timezone.now().date(),
+        status='upcoming'
+    ).order_by('date', 'time')
+    
     return render(request, 'secretary_dash/common/patient_detail.html', {
-        'patient': patient
+        'patient': patient,
+        'recent_examinations': recent_examinations,
+        'examination_history': examination_history,
+        'upcoming_appointments': upcoming_appointments
     })
 
 @login_required
@@ -149,25 +172,63 @@ def appointment_create(request):
         form = AppointmentForm(request.POST)
         if form.is_valid():
             appointment = form.save(commit=False)
-            # Get the secretary instance for the current user
-            if request.user.is_superuser:
-                # If it's a doctor (superuser), we'll need a default secretary
-                secretary = Secretary.objects.first()  # or some logic to determine default secretary
-                if not secretary:
-                    messages.error(request, 'No secretary available to create appointment.')
-                    return redirect('secretary_dash:appointment_list')
-            else:
-                secretary = request.user.secretary
-            
-            appointment.created_by = secretary
+            appointment.created_by = request.user
+            appointment.status = 'upcoming'
             appointment.save()
-            messages.success(request, 'Appointment scheduled successfully.')
+            messages.success(request, mark_safe(
+                '<div class="message-content">'
+                '<h4>Appointment Created</h4>'
+                '<p>The appointment has been scheduled successfully.</p>'
+                '</div>'
+            ))
             return redirect('secretary_dash:appointment_list')
+        else:
+            # Check specifically for busy hours error
+            errors = form.errors.get('__all__', [])
+            for error in errors:
+                if "doctor is not available" in str(error):
+                    date = form.cleaned_data.get('date')
+                    time = form.cleaned_data.get('time')
+                    if date and time:
+                        busy_hours = BusyHours.objects.filter(
+                            date=date,
+                            start_time__lte=time,
+                            end_time__gt=time
+                        ).first()
+                        if busy_hours:
+                            warning_html = mark_safe(
+                                '<div class="message-content">'
+                                '<h4>Cannot Schedule Appointment</h4>'
+                                f'<p>The doctor is busy on {busy_hours.date}</p>'
+                                f'<p><strong>Time:</strong> {busy_hours.start_time.strftime("%H:%M")} to {busy_hours.end_time.strftime("%H:%M")}</p>'
+                                f'<p><strong>Reason:</strong> {busy_hours.reason}</p>'
+                                '</div>'
+                            )
+                            messages.error(request, warning_html)
+                            continue
+
+            # Format other error messages
+            error_messages = []
+            for field, errors in form.errors.items():
+                if field == '__all__':
+                    # Skip busy hours error as it's already handled
+                    if not any("doctor is not available" in str(error) for error in errors):
+                        error_messages.extend(errors)
+                else:
+                    error_messages.append(f'<strong>{field}:</strong> {errors[0]}')
+            
+            if error_messages:
+                error_html = '<div class="message-content"><h4>Appointment Form Errors</h4><ul>'
+                for error in error_messages:
+                    error_html += f'<li>{error}</li>'
+                error_html += '</ul></div>'
+                messages.error(request, mark_safe(error_html))
     else:
         initial = {}
         if patient_id := request.GET.get('patient'):
             initial['patient'] = patient_id
         form = AppointmentForm(initial=initial)
+    
     return render(request, 'secretary_dash/common/appointment_form.html', {
         'form': form,
         'title': 'Schedule New Appointment'
@@ -199,7 +260,6 @@ def appointment_cancel(request, pk):
     if request.method == 'POST':
         appointment = get_object_or_404(Appointment, pk=pk)
         appointment.status = 'cancelled'
-        appointment.is_cancelled = True
         appointment.save()
         messages.success(request, 'Appointment cancelled successfully!')
     return redirect('secretary_dash:appointment_list')
@@ -209,7 +269,7 @@ def appointment_cancel(request, pk):
 def appointment_delete(request, pk):
     if request.method == 'POST':
         appointment = get_object_or_404(Appointment, pk=pk)
-        if appointment.is_cancelled:  # Only allow deletion of cancelled appointments
+        if appointment.status == 'cancelled':  # Only allow deletion of cancelled appointments
             appointment.delete()
             messages.success(request, 'Appointment deleted successfully!')
         else:
@@ -223,16 +283,16 @@ def secretary_dashboard(request):
     """
     View for the secretary's dashboard.
     """
-    # Get today's date and end of week
-    today = timezone.localdate()
+    # Get today's date and end of week using the correct timezone
+    today = timezone.localtime().date()
     week_end = today + timedelta(days=6)
     
     # Get statistics
     total_patients = Patient.objects.count()
-    total_appointments = Appointment.objects.filter(is_cancelled=False).count()
+    total_appointments = Appointment.objects.filter(status='upcoming').count()
     scheduled_appointments = Appointment.objects.filter(
         date__gte=today,
-        is_cancelled=False
+        status='upcoming'
     ).count()
     
     # Get all appointments for the current month
@@ -241,7 +301,7 @@ def secretary_dashboard(request):
     month_appointments = Appointment.objects.filter(
         date__year=current_year,
         date__month=current_month
-    ).values('id', 'date', 'time', 'patient__name', 'is_cancelled')
+    ).values('id', 'date', 'time', 'patient__name', 'status')
     
     # Format appointments for the calendar
     calendar_appointments = []
@@ -251,7 +311,24 @@ def secretary_dashboard(request):
             'date': appointment['date'].strftime('%Y-%m-%d'),
             'time': appointment['time'].strftime('%H:%M'),
             'patient': appointment['patient__name'],
-            'status': 'cancelled' if appointment['is_cancelled'] else 'active'
+            'status': appointment['status']
+        })
+    
+    # Get busy hours for the current month
+    busy_hours = BusyHours.objects.filter(
+        date__year=current_year,
+        date__month=current_month
+    ).values('id', 'date', 'start_time', 'end_time', 'reason')
+    
+    # Format busy hours for the calendar
+    calendar_busy_hours = []
+    for busy in busy_hours:
+        calendar_busy_hours.append({
+            'id': busy['id'],
+            'date': busy['date'].strftime('%Y-%m-%d'),
+            'start_time': busy['start_time'].strftime('%H:%M'),
+            'end_time': busy['end_time'].strftime('%H:%M'),
+            'reason': busy['reason']
         })
     
     context = {
@@ -259,6 +336,7 @@ def secretary_dashboard(request):
         'total_appointments': total_appointments,
         'scheduled_appointments': scheduled_appointments,
         'calendar_appointments': calendar_appointments,
+        'calendar_busy_hours': calendar_busy_hours,
     }
     
     return render(request, 'secretary_dash/secretary/dashboard.html', context)
@@ -339,15 +417,16 @@ def secretary_delete(request, pk):
 @login_required
 @user_passes_test(is_doctor)
 def doctor_dashboard(request):
-    today = timezone.now().date()
+    # Use timezone.localtime() to get the current time in Istanbul timezone
+    today = timezone.localtime().date()
     
     # Get statistics
     total_patients = Patient.objects.count()
-    total_appointments = Appointment.objects.filter(is_cancelled=False).count()
+    total_appointments = Appointment.objects.filter(status='upcoming').count()
     total_examinations = Examination.objects.count()
     total_medicines = Medicine.objects.count()
     
-    # Get today's appointments
+    # Get today's appointments using the correct timezone
     today_appointments = Appointment.objects.filter(
         date=today
     ).order_by('time')
@@ -360,7 +439,7 @@ def doctor_dashboard(request):
             'date': appointment.date.isoformat(),
             'time': appointment.time.strftime('%H:%M'),
             'patient': appointment.patient.name,
-            'status': 'cancelled' if appointment.is_cancelled else 'active'
+            'status': appointment.status
         })
     
     # Get busy hours
@@ -458,24 +537,93 @@ def examination_create(request):
     
     if request.method == 'POST':
         form = ExaminationForm(request.POST)
-        if form.is_valid():
+        formset = PrescriptionFormSet(request.POST, prefix='prescriptions')
+        
+        if form.is_valid() and formset.is_valid():
             examination = form.save(commit=False)
             examination.created_by = request.user
             examination.save()
             
-            formset = PrescriptionFormSet(request.POST, instance=examination)
-            if formset.is_valid():
-                formset.save()
-                messages.success(request, 'Examination created successfully.')
-                return redirect('secretary_dash:examination_list')
+            # Save the formset
+            prescriptions = formset.save(commit=False)
+            for prescription in prescriptions:
+                prescription.examination = examination
+                prescription.save()
+            
+            # Handle deleted prescriptions
+            for obj in formset.deleted_objects:
+                obj.delete()
+            
+            # Update the related appointment status to completed
+            appointment = Appointment.objects.filter(
+                patient=examination.patient,
+                date=examination.date,
+                time=examination.time
+            ).first()
+            
+            if appointment:
+                appointment.status = 'completed'
+                appointment.save()
+            
+            messages.success(request, mark_safe(
+                '<div class="message-content">'
+                '<h4>Examination Created</h4>'
+                '<p>The examination has been created successfully.</p>'
+                '</div>'
+            ))
+            return redirect('secretary_dash:examination_list')
+        else:
+            # Format error messages
+            if form.errors:
+                error_html = '<div class="message-content"><h4>Examination Form Errors</h4><ul>'
+                for field, errors in form.errors.items():
+                    if field == '__all__':
+                        error_html += f'<li>{errors[0]}</li>'
+                    else:
+                        error_html += f'<li><strong>{field}:</strong> {errors[0]}</li>'
+                error_html += '</ul></div>'
+                messages.error(request, mark_safe(error_html))
+            
+            if formset.errors:
+                error_html = '<div class="message-content"><h4>Prescription Form Errors</h4><ul>'
+                for form_num, form_errors in enumerate(formset.errors):
+                    if form_errors:
+                        error_html += f'<li><strong>Prescription {form_num + 1}:</strong><ul>'
+                        for field, errors in form_errors.items():
+                            error_html += f'<li><strong>{field}:</strong> {errors[0]}</li>'
+                        error_html += '</ul></li>'
+                error_html += '</ul></div>'
+                messages.error(request, mark_safe(error_html))
+            
+            if formset.non_form_errors():
+                error_html = '<div class="message-content"><h4>Prescription Errors</h4><ul>'
+                for error in formset.non_form_errors():
+                    error_html += f'<li>{error}</li>'
+                error_html += '</ul></div>'
+                messages.error(request, mark_safe(error_html))
     else:
         initial = {}
         if appointment_id := request.GET.get('appointment'):
             appointment = get_object_or_404(Appointment, id=appointment_id)
-            initial['patient'] = appointment.patient
+            
+            # Check if appointment is cancelled
+            if appointment.status == 'cancelled':
+                messages.error(request, mark_safe(
+                    '<div class="message-content">'
+                    '<h4>Cannot Create Examination</h4>'
+                    '<p>Cannot create examination for a cancelled appointment.</p>'
+                    '</div>'
+                ))
+                return redirect('secretary_dash:doctor_dashboard')
+            
+            initial.update({
+                'patient': appointment.patient,
+                'date': appointment.date,
+                'time': appointment.time
+            })
         
         form = ExaminationForm(initial=initial)
-        formset = PrescriptionFormSet()
+        formset = PrescriptionFormSet(prefix='prescriptions')
     
     return render(request, 'secretary_dash/doctor/examination_form.html', {
         'form': form,
@@ -500,14 +648,14 @@ def examination_edit(request, pk):
         if form.is_valid():
             examination = form.save()
             
-            formset = PrescriptionFormSet(request.POST, instance=examination)
+            formset = PrescriptionFormSet(request.POST, instance=examination, prefix='prescriptions')
             if formset.is_valid():
                 formset.save()
                 messages.success(request, 'Examination updated successfully.')
                 return redirect('secretary_dash:examination_list')
     else:
         form = ExaminationForm(instance=examination)
-        formset = PrescriptionFormSet(instance=examination)
+        formset = PrescriptionFormSet(instance=examination, prefix='prescriptions')
     
     return render(request, 'secretary_dash/doctor/examination_form.html', {
         'form': form,

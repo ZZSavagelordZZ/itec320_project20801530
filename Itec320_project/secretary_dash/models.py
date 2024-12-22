@@ -29,23 +29,30 @@ class Patient(models.Model):
         ordering = ['name']
 
 class Appointment(models.Model):
+    STATUS_CHOICES = [
+        ('upcoming', 'Upcoming'),
+        ('completed', 'Completed'),
+        ('cancelled', 'Cancelled')
+    ]
+    
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
     date = models.DateField()
     time = models.TimeField()
     created_by = models.ForeignKey(Secretary, on_delete=models.CASCADE)
-    is_cancelled = models.BooleanField(default=False)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='upcoming')
     created_at = models.DateTimeField(auto_now_add=True)
 
-    def clean(self):
-        if not self.is_cancelled:
-            existing_appointments = Appointment.objects.filter(
+    def save(self, *args, **kwargs):
+        # Check if there's a completed examination for this appointment
+        if hasattr(self, 'pk'):  # Only check if appointment already exists
+            if Examination.objects.filter(
+                patient=self.patient,
                 date=self.date,
-                time=self.time,
-                is_cancelled=False
-            ).exclude(pk=self.pk)
-            
-            if existing_appointments.exists():
-                raise ValidationError('This time slot is already booked.')
+                time=self.time
+            ).exists():
+                self.status = 'completed'
+        
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.patient} - {self.date} {self.time}"
@@ -67,21 +74,21 @@ class Medicine(models.Model):
 
 class Examination(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
-    date = models.DateField(auto_now_add=True)
     symptoms = models.TextField()
     diagnosis = models.TextField()
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
-    is_completed = models.BooleanField(default=False)
+    date = models.DateField()
+    time = models.TimeField()
 
     def __str__(self):
-        return f"{self.patient} - {self.date}"
+        return f"Examination for {self.patient} on {self.date}"
 
     class Meta:
         ordering = ['-date']
 
 class Prescription(models.Model):
-    examination = models.ForeignKey(Examination, on_delete=models.CASCADE)
+    examination = models.ForeignKey(Examination, on_delete=models.CASCADE, related_name='prescriptions')
     medicine = models.ForeignKey(Medicine, on_delete=models.CASCADE)
     dosage = models.CharField(max_length=100)
     duration = models.CharField(max_length=100)

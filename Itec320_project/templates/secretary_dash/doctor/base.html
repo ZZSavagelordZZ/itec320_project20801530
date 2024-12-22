@@ -63,13 +63,48 @@
 
     <div class="main-content">
         {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }}">
-                    {{ message }}
-                </div>
-            {% endfor %}
+            <div class="messages-container">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message|safe }}
+                    </div>
+                {% endfor %}
+            </div>
         {% endif %}
         
         {% block content %}{% endblock %}
     </div>
+
+    <style>
+        .messages-container {
+            margin-bottom: 2rem;
+            animation: slide-down 0.3s ease-out;
+        }
+
+        @keyframes slide-down {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .alert {
+            margin-bottom: 1rem;
+            border-radius: 8px;
+        }
+
+        .alert:last-child {
+            margin-bottom: 0;
+        }
+
+        .alert.alert-error {
+            padding: 0;
+            background: none;
+            border: none;
+        }
+    </style>
 {% endblock %} 

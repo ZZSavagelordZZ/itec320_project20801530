@@ -16,27 +16,44 @@ class PatientForm(forms.ModelForm):
         }
 
 class AppointmentForm(forms.ModelForm):
+    TIME_CHOICES = [
+        ('09:00', '9:00 AM'),
+        ('09:30', '9:30 AM'),
+        ('10:00', '10:00 AM'),
+        ('10:30', '10:30 AM'),
+        ('11:00', '11:00 AM'),
+        ('11:30', '11:30 AM'),
+        ('12:00', '12:00 PM'),
+        ('12:30', '12:30 PM'),
+        ('13:00', '1:00 PM'),
+        ('13:30', '1:30 PM'),
+        ('14:00', '2:00 PM'),
+        ('14:30', '2:30 PM'),
+        ('15:00', '3:00 PM'),
+        ('15:30', '3:30 PM'),
+        ('16:00', '4:00 PM'),
+        ('16:30', '4:30 PM'),
+    ]
+
+    time = forms.ChoiceField(choices=TIME_CHOICES)
+
     class Meta:
         model = Appointment
         fields = ['patient', 'date', 'time']
         widgets = {
             'date': forms.DateInput(attrs={'type': 'date'}),
-            'time': forms.TimeInput(attrs={'type': 'time'})
         }
 
     def clean(self):
         cleaned_data = super().clean()
         date = cleaned_data.get('date')
-        time = cleaned_data.get('time')
+        time_str = cleaned_data.get('time')
 
-        if date and time:
-            # Check if appointment is during business hours (9 AM - 5 PM)
-            if time.hour < 9 or time.hour >= 17:
-                raise forms.ValidationError("Appointments must be between 9 AM and 5 PM")
-            
-            # Check if appointment is at :00 or :30
-            if time.minute not in [0, 30]:
-                raise forms.ValidationError("Appointments must start at :00 or :30")
+        if date and time_str:
+            # Convert time string to time object
+            hour, minute = map(int, time_str.split(':'))
+            time = timezone.now().replace(hour=hour, minute=minute, second=0, microsecond=0).time()
+            cleaned_data['time'] = time
 
             # Check for busy hours
             busy_hours = BusyHours.objects.filter(
@@ -51,7 +68,7 @@ class AppointmentForm(forms.ModelForm):
             existing_appointments = Appointment.objects.filter(
                 date=date,
                 time=time,
-                is_cancelled=False
+                status='upcoming'
             ).exclude(pk=self.instance.pk if self.instance else None)
 
             if existing_appointments.exists():
@@ -71,10 +88,12 @@ class MedicineForm(forms.ModelForm):
 class ExaminationForm(forms.ModelForm):
     class Meta:
         model = Examination
-        fields = ['patient', 'symptoms', 'diagnosis']
+        fields = ['patient', 'date', 'time', 'symptoms', 'diagnosis']
         widgets = {
             'symptoms': forms.Textarea(attrs={'rows': 4}),
             'diagnosis': forms.Textarea(attrs={'rows': 4}),
+            'date': forms.DateInput(attrs={'type': 'date'}),
+            'time': forms.TimeInput(attrs={'type': 'time'})
         }
 
 class PrescriptionForm(forms.ModelForm):
@@ -84,6 +103,12 @@ class PrescriptionForm(forms.ModelForm):
         widgets = {
             'notes': forms.Textarea(attrs={'rows': 3}),
         }
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Make all fields optional
+        for field in self.fields.values():
+            field.required = False
 
 class SecretaryCreationForm(UserCreationForm):
     phone = forms.CharField(max_length=20)

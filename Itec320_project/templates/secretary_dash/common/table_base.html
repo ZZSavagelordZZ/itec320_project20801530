@@ -150,22 +150,28 @@
     }
 
     .badge {
-        padding: 0.35em 0.65em;
-        font-size: 0.75em;
-        font-weight: 700;
-        border-radius: 0.25rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        padding: 0.5rem 1rem;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        font-weight: 500;
     }
 
-    .badge-success {
-        background-color: #d4edda;
-        color: #155724;
+    .badge-upcoming {
+        background: #e3f2fd;
+        color: #1976d2;
     }
 
-    .badge-warning {
-        background-color: #fff3cd;
-        color: #856404;
+    .badge-completed {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .badge-cancelled {
+        background: #fee2e2;
+        color: #991b1b;
     }
 </style>
 {% endblock %} 

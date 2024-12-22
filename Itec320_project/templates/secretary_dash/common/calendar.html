@@ -1,94 +1,734 @@
-{% extends 'secretary_dash/common/base.html' %}
+{% load static %}
 
-{% block content %}
-    <h1>{% if user.is_superuser %}My Schedule{% else %}Appointment Calendar{% endif %}</h1>
-    
-    <div class="calendar-nav">
-        <a href="?start_date={{ prev_week|date:'Y-m-d' }}" class="btn">&lt; Previous Week</a>
-        <span class="current-week">{{ start_date|date:'F d' }} - {{ end_date|date:'F d, Y' }}</span>
-        <a href="?start_date={{ next_week|date:'Y-m-d' }}" class="btn">Next Week &gt;</a>
+<div class="calendar-section {% if small_calendar %}calendar-small{% endif %}">
+    <div class="calendar-header">
+        <h2>Appointments Calendar</h2>
+        <div class="calendar-controls">
+            <button class="btn btn-sm" onclick="changeView('month')" id="monthView">
+                <i class="fas fa-calendar-alt"></i> Month
+            </button>
+            <button class="btn btn-sm" onclick="changeView('week')" id="weekView">
+                <i class="fas fa-calendar-week"></i> Week
+            </button>
+            <button class="btn btn-sm" onclick="changeView('day')" id="dayView">
+                <i class="fas fa-calendar-day"></i> Day
+            </button>
+        </div>
     </div>
-
-    <div class="calendar">
-        {% for date, appointments in appointment_days.items %}
-            <div class="day {% if date == today %}today{% endif %}">
-                <h3>{{ date|date:'l, F d' }}</h3>
-                <div class="appointments">
-                    {% for appointment in appointments %}
-                        <div class="appointment {% if appointment.is_cancelled %}cancelled{% endif %}">
-                            <time>{{ appointment.time|time:'H:i' }}</time>
-                            <div class="patient-info">
-                                <strong>{{ appointment.patient }}</strong>
-                                <span>{{ appointment.patient.phone }}</span>
+    <div class="calendar-container">
+        <div class="calendar-navigation">
+            <button class="btn btn-sm" onclick="previousPeriod()">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <h3 id="currentPeriod"></h3>
+            <button class="btn btn-sm" onclick="nextPeriod()">
+                <i class="fas fa-chevron-right"></i>
+            </button>
                             </div>
-                            <div class="actions">
-                                {% if not appointment.is_cancelled %}
-                                    {% if user.is_superuser %}
-                                        <a href="{% url 'edit_appointment' appointment.id %}" class="btn btn-sm">Edit</a>
-                                    {% endif %}
-                                    <form method="post" action="{% url 'cancel_appointment' appointment.id %}" style="display: inline;">
-                                        {% csrf_token %}
-                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to cancel this appointment?')">Cancel</button>
-                                    </form>
-                                {% else %}
-                                    <span class="cancelled-text">Cancelled</span>
-                                {% endif %}
-                            </div>
-                        </div>
-                    {% empty %}
-                        <p class="no-appointments">No appointments scheduled</p>
-                    {% endfor %}
-                </div>
+        <div id="calendar"></div>
             </div>
-        {% endfor %}
     </div>
 
     <style>
-        .calendar-nav {
+.calendar-section {
+    background: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.calendar-section.calendar-small {
+    max-width: 600px;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.calendar-header h2 {
+    margin: 0;
+    font-size: 1.25rem;
+}
+
+.calendar-controls {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.calendar-navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.calendar-navigation h3 {
+    margin: 0;
+    font-size: 1.125rem;
+}
+
+#calendar {
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+}
+
+.calendar-container {
+    overflow-x: auto;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(80px, 1fr));
+    gap: 1px;
+    background: #e2e8f0;
+    min-width: 560px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.calendar-header-cell {
+    background: #f8fafc;
+    padding: 0.5rem;
+    text-align: center;
+    font-weight: 600;
+}
+
+.calendar-cell {
+    background: white;
+    min-height: 100px;
+    padding: 0.5rem;
+    position: relative;
+}
+
+.calendar-small .calendar-cell {
+    min-height: 80px;
+}
+
+.calendar-cell.other-month {
+    background: #f8fafc;
+}
+
+.calendar-cell.today {
+    background: #e3f2fd;
+}
+
+.date {
+    position: absolute;
+    top: 0.25rem;
+    right: 0.25rem;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.today .date {
+    background: #1976d2;
+    color: white;
+}
+
+.appointments-container {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.appointment-preview {
+    font-size: 0.75rem;
+    padding: 0.25rem;
+    border-radius: 4px;
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            margin-bottom: 2rem;
-        }
-        .current-week {
-            font-size: 1.25rem;
-            font-weight: bold;
-        }
-        .calendar {
+    gap: 0.25rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.appointment-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.appointment-active {
+    background: #4caf50;
+}
+
+.appointment-cancelled {
+    background: #f44336;
+}
+
+/* Week View Styles */
+.week-grid {
+    display: grid;
+    grid-template-columns: auto repeat(7, minmax(80px, 1fr));
+    gap: 1px;
+    background: #e2e8f0;
+    min-width: 560px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.time-header {
+    min-width: 60px;
+}
+
+.time-column {
+    background: #f8fafc;
+    padding: 0.5rem;
+    text-align: right;
+    font-weight: 500;
+    min-width: 60px;
+}
+
+.week-slot {
+    background: white;
+    min-height: 60px;
+    padding: 0.25rem;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.week-slot.current {
+    background: #e3f2fd;
+}
+
+/* Day View Styles */
+.day-schedule {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    background: #e2e8f0;
+    min-width: 560px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.time-slot {
+    background: white;
+    min-height: 60px;
+    padding: 0.5rem;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: 80px 1fr;
             gap: 1rem;
         }
-        .day {
-            border: 1px solid #ddd;
-            padding: 1rem;
+
+.time-slot.current {
+    background: #e3f2fd;
+}
+
+.time-label {
+    font-weight: 500;
+    text-align: right;
+}
+
+.time-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.half-hour-slot {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.125rem;
+    border-bottom: 1px dashed #e2e8f0;
+}
+
+.half-hour-slot:last-child {
+    border-bottom: none;
+}
+
+/* Make appointments more compact in week/day views */
+.week-slot .appointment-preview,
+.time-slot .appointment-preview {
+    font-size: 0.75rem;
+    padding: 0.125rem 0.25rem;
+}
+
+.calendar-small .week-slot,
+.calendar-small .time-slot {
+    min-height: 50px;
+}
+
+.busy-preview {
+    font-size: 0.75rem;
+    padding: 0.25rem;
+    border-radius: 4px;
+    background: rgba(220, 38, 38, 0.1);
+    color: #dc2626;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.busy-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #dc2626;
+    flex-shrink: 0;
+}
+
+.busy-block {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background: rgba(220, 38, 38, 0.1);
+    border: 2px solid #dc2626;
             border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+}
+
+/* Specific styling for day view busy blocks */
+.time-slot .busy-block {
+    position: relative;
+    height: 25px;
+    margin: 2px 0;
+}
+
+.time-slot .busy-text {
+    font-size: 0.7rem;
+}
+
+/* Specific styling for week view busy blocks */
+.week-slot .busy-block {
+    position: relative;
+    height: 25px;
+    margin: 2px 0;
+}
+
+.week-slot .busy-text {
+    font-size: 0.7rem;
+}
+
+.busy-text {
+    color: #dc2626;
+    font-weight: bold;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+}
+
+.calendar-entry {
+    padding: 4px 8px;
+    margin: 2px 0;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.calendar-entry.status-upcoming {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+.calendar-entry.status-completed {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.calendar-entry.status-cancelled {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.calendar-entry:hover {
+    opacity: 0.8;
+}
+</style>
+
+<script>
+let currentDate = new Date();
+// Get today's date without time component
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+
+let currentView = 'month';
+const appointments = {{ appointments|safe }};
+const busyHours = {{ busy_hours|safe }};
+
+// Helper functions for consistent date handling
+function isSameDay(date1, date2) {
+    return date1.getFullYear() === date2.getFullYear() &&
+           date1.getMonth() === date2.getMonth() &&
+           date1.getDate() === date2.getDate();
+}
+
+function formatTime(hour, minute = 0) {
+    return `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+}
+
+function getAppointmentsForDate(date, time = null) {
+    return appointments.filter(apt => {
+        const aptDate = new Date(apt.date);
+        if (!isSameDay(aptDate, date)) return false;
+        if (time !== null) {
+            return apt.time === time;
         }
-        .today {
-            background-color: #f8f9fa;
-            border-color: #007bff;
+        return true;
+    });
+}
+
+function getBusyHoursForDate(date, hour = null) {
+    return busyHours.filter(busy => {
+        const busyDate = new Date(busy.date);
+        if (!isSameDay(busyDate, date)) return false;
+        if (hour !== null) {
+            const busyStartHour = parseInt(busy.start_time.split(':')[0]);
+            const busyEndHour = parseInt(busy.end_time.split(':')[0]);
+            return hour >= busyStartHour && hour < busyEndHour;
         }
-        .appointment {
-            border: 1px solid #eee;
-            padding: 0.5rem;
-            margin-bottom: 0.5rem;
-            border-radius: 4px;
+        return true;
+    });
+}
+
+function renderAppointmentPreview(apt, showPatient = true) {
+    const div = document.createElement('div');
+    div.className = `calendar-entry status-${apt.status}`;
+    div.innerHTML = `${showPatient ? `${apt.time} - ${apt.patient}` : apt.time}`;
+    return div;
+}
+
+function renderBusyPreview(busy) {
+    const div = document.createElement('div');
+    div.className = 'busy-preview';
+    div.innerHTML = `
+        <div class="busy-dot"></div>
+        <span>Busy ${busy.start_time}-${busy.end_time}</span>
+    `;
+    return div;
+}
+
+function renderBusyBlock() {
+    const div = document.createElement('div');
+    div.className = 'busy-block';
+    div.innerHTML = '<span class="busy-text">BUSY</span>';
+    return div;
+}
+
+function initializeCalendar() {
+    updateCalendar();
+    updateCurrentPeriod();
+    setActiveViewButton();
+}
+
+function changeView(view) {
+    currentView = view;
+    updateCalendar();
+    updateCurrentPeriod();
+    setActiveViewButton();
+}
+
+function setActiveViewButton() {
+    document.querySelectorAll('.calendar-controls .btn').forEach(btn => {
+        btn.classList.remove('btn-primary');
+    });
+    document.getElementById(currentView + 'View').classList.add('btn-primary');
+}
+
+function previousPeriod() {
+    switch(currentView) {
+        case 'month':
+            currentDate.setMonth(currentDate.getMonth() - 1);
+            break;
+        case 'week':
+            currentDate.setDate(currentDate.getDate() - 7);
+            break;
+        case 'day':
+            currentDate.setDate(currentDate.getDate() - 1);
+            break;
+    }
+    updateCalendar();
+    updateCurrentPeriod();
+}
+
+function nextPeriod() {
+    switch(currentView) {
+        case 'month':
+            currentDate.setMonth(currentDate.getMonth() + 1);
+            break;
+        case 'week':
+            currentDate.setDate(currentDate.getDate() + 7);
+            break;
+        case 'day':
+            currentDate.setDate(currentDate.getDate() + 1);
+            break;
+    }
+    updateCalendar();
+    updateCurrentPeriod();
+}
+
+function updateCurrentPeriod() {
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 
+                   'July', 'August', 'September', 'October', 'November', 'December'];
+    let periodText = '';
+    
+    switch(currentView) {
+        case 'month':
+            periodText = `${months[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
+            break;
+        case 'week':
+            const weekStart = new Date(currentDate);
+            weekStart.setDate(currentDate.getDate() - currentDate.getDay());
+            const weekEnd = new Date(weekStart);
+            weekEnd.setDate(weekStart.getDate() + 6);
+            periodText = `${weekStart.getDate()} ${months[weekStart.getMonth()]} - ${weekEnd.getDate()} ${months[weekEnd.getMonth()]} ${weekEnd.getFullYear()}`;
+            break;
+        case 'day':
+            periodText = `${currentDate.getDate()} ${months[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
+            break;
+    }
+    document.getElementById('currentPeriod').textContent = periodText;
+}
+
+function updateCalendar() {
+    const calendarDiv = document.getElementById('calendar');
+    calendarDiv.innerHTML = '';
+
+    switch(currentView) {
+        case 'month':
+            renderMonthView(calendarDiv);
+            break;
+        case 'week':
+            renderWeekView(calendarDiv);
+            break;
+        case 'day':
+            renderDayView(calendarDiv);
+            break;
+    }
+}
+
+function renderMonthView(container) {
+    const grid = document.createElement('div');
+    grid.className = 'calendar-grid';
+
+    // Add day headers
+    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    days.forEach(day => {
+        const header = document.createElement('div');
+        header.className = 'calendar-header-cell';
+        header.textContent = day;
+        grid.appendChild(header);
+    });
+
+    // Get the first day of the month
+    const firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+    const lastDay = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+    
+    // Add padding cells for previous month
+    let startPadding = firstDay.getDay();
+    for (let i = 0; i < startPadding; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'calendar-cell other-month';
+        grid.appendChild(cell);
+    }
+
+    // Add days of current month
+    for (let i = 1; i <= lastDay.getDate(); i++) {
+        const cell = document.createElement('div');
+        cell.className = 'calendar-cell';
+        
+        const cellDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), i);
+        if (isSameDay(cellDate, today)) {
+            cell.classList.add('today');
         }
-        .appointment.cancelled {
-            background-color: #f8d7da;
-            border-color: #f5c6cb;
+        
+        const dateDiv = document.createElement('div');
+        dateDiv.className = 'date';
+        dateDiv.textContent = i;
+        cell.appendChild(dateDiv);
+
+        // Add appointments for this day
+        const dayAppointments = getAppointmentsForDate(cellDate);
+        if (dayAppointments.length > 0) {
+            const appointmentsContainer = document.createElement('div');
+            appointmentsContainer.className = 'appointments-container';
+            dayAppointments.forEach(apt => {
+                appointmentsContainer.appendChild(renderAppointmentPreview(apt, false));
+            });
+            cell.appendChild(appointmentsContainer);
         }
-        .patient-info {
-            margin: 0.5rem 0;
+
+        // Add busy hours for this day
+        const dayBusyHours = getBusyHoursForDate(cellDate);
+        if (dayBusyHours.length > 0) {
+            const busyContainer = document.createElement('div');
+            busyContainer.className = 'busy-container';
+            dayBusyHours.forEach(busy => {
+                busyContainer.appendChild(renderBusyPreview(busy));
+            });
+            cell.appendChild(busyContainer);
         }
-        .patient-info span {
-            display: block;
-            font-size: 0.875rem;
-            color: #666;
+
+        grid.appendChild(cell);
+    }
+
+    container.appendChild(grid);
+}
+
+function renderWeekView(container) {
+    const grid = document.createElement('div');
+    grid.className = 'week-grid';
+
+    // Add time column header
+    const timeHeader = document.createElement('div');
+    timeHeader.className = 'calendar-header-cell time-header';
+    timeHeader.textContent = 'Time';
+    grid.appendChild(timeHeader);
+
+    // Get week start date
+    const weekStart = new Date(currentDate);
+    weekStart.setDate(currentDate.getDate() - currentDate.getDay());
+    
+    // Add day headers
+    for (let i = 0; i < 7; i++) {
+        const dayDate = new Date(weekStart);
+        dayDate.setDate(weekStart.getDate() + i);
+        const header = document.createElement('div');
+        header.className = 'calendar-header-cell';
+        header.textContent = dayDate.toLocaleDateString('en-US', { weekday: 'short', month: 'numeric', day: 'numeric' });
+        grid.appendChild(header);
+    }
+
+    // Add time slots
+    for (let hour = 9; hour < 17; hour++) {
+        // Time column
+        const timeCol = document.createElement('div');
+        timeCol.className = 'time-column';
+        timeCol.textContent = formatTime(hour);
+        grid.appendChild(timeCol);
+
+        // Add slots for each day
+        for (let day = 0; day < 7; day++) {
+            const slotDate = new Date(weekStart);
+            slotDate.setDate(weekStart.getDate() + day);
+            
+            const slot = document.createElement('div');
+            slot.className = 'week-slot';
+            
+            // Create half-hour slots
+            const firstHalf = document.createElement('div');
+            firstHalf.className = 'half-hour-slot';
+            const secondHalf = document.createElement('div');
+            secondHalf.className = 'half-hour-slot';
+            
+            // Check if current time
+            if (isSameDay(slotDate, today) && today.getHours() === hour) {
+                if (today.getMinutes() < 30) {
+                    firstHalf.classList.add('current');
+                } else {
+                    secondHalf.classList.add('current');
+                }
+            }
+
+            // Add appointments
+            const firstHalfAppts = getAppointmentsForDate(slotDate, formatTime(hour, 0));
+            const secondHalfAppts = getAppointmentsForDate(slotDate, formatTime(hour, 30));
+
+            firstHalfAppts.forEach(apt => firstHalf.appendChild(renderAppointmentPreview(apt, false)));
+            secondHalfAppts.forEach(apt => secondHalf.appendChild(renderAppointmentPreview(apt, false)));
+
+            // Add busy hours
+            const slotBusyHours = getBusyHoursForDate(slotDate, hour);
+            if (slotBusyHours.length > 0) {
+                firstHalf.appendChild(renderBusyBlock());
+                secondHalf.appendChild(renderBusyBlock());
+            }
+
+            slot.appendChild(firstHalf);
+            slot.appendChild(secondHalf);
+            grid.appendChild(slot);
         }
-        .no-appointments {
-            color: #666;
-            font-style: italic;
+    }
+
+    container.appendChild(grid);
+}
+
+function renderDayView(container) {
+    const schedule = document.createElement('div');
+    schedule.className = 'day-schedule';
+
+    // Add time slots
+    for (let hour = 9; hour < 17; hour++) {
+        const timeSlot = document.createElement('div');
+        timeSlot.className = 'time-slot';
+        
+        const timeLabel = document.createElement('div');
+        timeLabel.className = 'time-label';
+        timeLabel.textContent = formatTime(hour);
+        timeSlot.appendChild(timeLabel);
+
+        const timeContent = document.createElement('div');
+        timeContent.className = 'time-content';
+
+        // Create half-hour slots
+        const firstHalf = document.createElement('div');
+        firstHalf.className = 'half-hour-slot';
+        const secondHalf = document.createElement('div');
+        secondHalf.className = 'half-hour-slot';
+
+        // Check if current time
+        if (isSameDay(currentDate, today) && today.getHours() === hour) {
+            if (today.getMinutes() < 30) {
+                firstHalf.classList.add('current');
+            } else {
+                secondHalf.classList.add('current');
+            }
         }
-    </style>
-{% endblock %} 
+
+        // Add appointments
+        const firstHalfAppts = getAppointmentsForDate(currentDate, formatTime(hour, 0));
+        const secondHalfAppts = getAppointmentsForDate(currentDate, formatTime(hour, 30));
+
+        firstHalfAppts.forEach(apt => firstHalf.appendChild(renderAppointmentPreview(apt, true)));
+        secondHalfAppts.forEach(apt => secondHalf.appendChild(renderAppointmentPreview(apt, true)));
+
+        // Add busy hours
+        const slotBusyHours = getBusyHoursForDate(currentDate, hour);
+        if (slotBusyHours.length > 0) {
+            firstHalf.appendChild(renderBusyBlock());
+            secondHalf.appendChild(renderBusyBlock());
+        }
+
+        timeContent.appendChild(firstHalf);
+        timeContent.appendChild(secondHalf);
+        timeSlot.appendChild(timeContent);
+        schedule.appendChild(timeSlot);
+    }
+
+    container.appendChild(schedule);
+}
+
+function createAppointmentElement(appointment) {
+    const div = document.createElement('div');
+    div.className = `calendar-entry status-${appointment.status}`;
+    div.innerHTML = `${appointment.time} - ${appointment.patient}`;
+    return div;
+}
+
+// Initialize calendar when the page loads
+document.addEventListener('DOMContentLoaded', initializeCalendar);
+</script>

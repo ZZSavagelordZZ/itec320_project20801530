@@ -28,12 +28,12 @@
                     <td>{{ appointment.time }}</td>
                     <td>{{ appointment.patient.name }}</td>
                     <td>
-                        <span class="badge badge-{% if appointment.is_cancelled %}warning{% else %}success{% endif %}">
-                            {% if appointment.is_cancelled %}Cancelled{% else %}Active{% endif %}
+                        <span class="badge badge-{{ appointment.status }}">
+                            {{ appointment.status|title }}
                         </span>
                     </td>
                     <td class="actions-column">
-                        {% if not appointment.is_cancelled %}
+                        {% if appointment.status != 'cancelled' %}
                             <a href="{% url 'secretary_dash:appointment_edit' appointment.id %}" class="btn btn-edit btn-sm">
                                 <i class="fas fa-edit"></i>
                                 <span>Edit</span>

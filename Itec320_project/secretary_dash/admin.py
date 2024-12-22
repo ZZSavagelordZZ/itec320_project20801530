@@ -14,9 +14,9 @@ class PatientAdmin(admin.ModelAdmin):
 
 @admin.register(Appointment)
 class AppointmentAdmin(admin.ModelAdmin):
-    list_display = ('patient', 'date', 'time', 'created_by', 'is_cancelled')
-    list_filter = ('date', 'is_cancelled')
-    search_fields = ('patient__name',)
+    list_display = ('patient', 'date', 'time', 'created_by', 'status', 'created_at')
+    list_filter = ('date', 'status')
+    search_fields = ('patient__name', 'created_by__user__username')
 
 @admin.register(Medicine)
 class MedicineAdmin(admin.ModelAdmin):
