@@ -82,6 +82,7 @@
     </div>
     {% endif %}
 
+    {% if request.user.is_superuser %}
     {% if recent_examinations %}
     <div class="detail-section">
         <div class="section-header">
@@ -178,6 +179,7 @@
             {% endfor %}
         </div>
     </div>
+    {% endif %}
     {% endif %}
 </div>
 
