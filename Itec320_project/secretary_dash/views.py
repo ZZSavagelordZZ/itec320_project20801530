@@ -172,19 +172,7 @@ def appointment_create(request):
         form = AppointmentForm(request.POST)
         if form.is_valid():
             appointment = form.save(commit=False)
-            
-            # Handle both doctors and secretaries
-            if request.user.is_superuser:
-                # For doctors, create a Secretary instance if it doesn't exist
-                secretary, created = Secretary.objects.get_or_create(
-                    user=request.user,
-                    defaults={'phone': ''}  # Add a default empty phone number
-                )
-            else:
-                # For secretaries, get their existing Secretary instance
-                secretary = Secretary.objects.get(user=request.user)
-            
-            appointment.created_by = secretary
+            appointment.created_by = request.user
             appointment.status = 'upcoming'
             appointment.save()
             messages.success(request, mark_safe(
