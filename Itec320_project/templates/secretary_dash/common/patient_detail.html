@@ -4,7 +4,7 @@
 {% block content %}
 <div class="detail-container">
     <div class="detail-header">
-        <h1>Patient Details</h1>
+        <h1><i class="fas fa-user-circle text-success"></i> Patient Details</h1>
         <div class="actions">
             <a href="{% url 'secretary_dash:patient_edit' patient.id %}" class="btn btn-primary">
                 <i class="fas fa-edit"></i> Edit Patient
@@ -17,29 +17,35 @@
 
     <div class="detail-section">
         <div class="section-header">
-            <i class="fas fa-user-circle"></i>
+            <i class="fas fa-info-circle text-success"></i>
             <h2>Personal Information</h2>
         </div>
-        <div class="info-grid">
-            <div class="info-item">
-                <label><i class="fas fa-user"></i> Name</label>
-                <span>{{ patient.name }}</span>
+        <div class="medical-details">
+            <div class="medical-item">
+                <h3><i class="fas fa-user text-success"></i> Basic Details</h3>
+                <div class="detail-row">
+                    <p><i class="fas fa-user text-success"></i> <strong>Name:</strong></p>
+                    <span>{{ patient.name }}</span>
+                </div>
+                <div class="detail-row">
+                    <p><i class="fas fa-birthday-cake text-success"></i> <strong>Date of Birth:</strong></p>
+                    <span>{{ patient.date_of_birth }}</span>
+                </div>
             </div>
-            <div class="info-item">
-                <label><i class="fas fa-birthday-cake"></i> Date of Birth</label>
-                <span>{{ patient.date_of_birth }}</span>
-            </div>
-            <div class="info-item">
-                <label><i class="fas fa-phone"></i> Phone</label>
-                <span>{{ patient.phone }}</span>
-            </div>
-            <div class="info-item">
-                <label><i class="fas fa-envelope"></i> Email</label>
-                <span>{{ patient.email }}</span>
-            </div>
-            <div class="info-item full-width">
-                <label><i class="fas fa-map-marker-alt"></i> Address</label>
-                <p>{{ patient.address }}</p>
+            <div class="medical-item">
+                <h3><i class="fas fa-address-card text-success"></i> Contact Information</h3>
+                <div class="detail-row">
+                    <p><i class="fas fa-phone text-success"></i> <strong>Phone:</strong></p>
+                    <span>{{ patient.phone }}</span>
+                </div>
+                <div class="detail-row">
+                    <p><i class="fas fa-envelope text-success"></i> <strong>Email:</strong></p>
+                    <span>{{ patient.email }}</span>
+                </div>
+                <div class="detail-row">
+                    <p><i class="fas fa-map-marker-alt text-success"></i> <strong>Address:</strong></p>
+                    <span>{{ patient.address }}</span>
+                </div>
             </div>
         </div>
     </div>
@@ -47,26 +53,28 @@
     {% if upcoming_appointments %}
     <div class="detail-section">
         <div class="section-header">
-            <i class="fas fa-calendar-check"></i>
+            <i class="fas fa-calendar-check text-success"></i>
             <h2>Upcoming Appointments</h2>
         </div>
-        <div class="appointments-grid">
+        <div class="medical-details">
             {% for appointment in upcoming_appointments %}
-            <div class="appointment-card">
-                <div class="appointment-info">
-                    <div class="appointment-time">
-                        <i class="far fa-calendar"></i>
-                        <span>{{ appointment.date }}</span>
-                    </div>
-                    <div class="appointment-time">
-                        <i class="far fa-clock"></i>
-                        <span>{{ appointment.get_formatted_time }}</span>
+            <div class="medical-item">
+                <div class="prescription-header">
+                    <i class="far fa-calendar text-success"></i>
+                    <div class="prescription-title">
+                        <h3>{{ appointment.date }}</h3>
+                        <span class="medicine-details">{{ appointment.get_formatted_time }}</span>
                     </div>
                 </div>
-                <div class="appointment-status">
-                    <span class="status-badge status-{{ appointment.status }}">
-                        {{ appointment.status|title }}
-                    </span>
+                <div class="prescription-details">
+                    <div class="detail-row">
+                        <p><i class="fas fa-clock text-success"></i> <strong>Time:</strong></p>
+                        <span>{{ appointment.get_formatted_time }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <p><i class="fas fa-info-circle text-success"></i> <strong>Status:</strong></p>
+                        <span class="status-badge status-{{ appointment.status }}">{{ appointment.status|title }}</span>
+                    </div>
                 </div>
             </div>
             {% endfor %}
@@ -77,58 +85,45 @@
     {% if recent_examinations %}
     <div class="detail-section">
         <div class="section-header">
-            <i class="fas fa-stethoscope"></i>
+            <i class="fas fa-stethoscope text-success"></i>
             <h2>Recent Examinations</h2>
         </div>
-        <div class="examinations-grid">
+        <div class="medical-details">
             {% for examination in recent_examinations %}
-            <div class="examination-card">
-                <div class="examination-header">
-                    <div class="examination-date">
-                        <i class="far fa-calendar-alt"></i>
-                        <span>{{ examination.date }}</span>
-                    </div>
-                    <div class="examination-time">
-                        <i class="far fa-clock"></i>
-                        <span>{{ examination.time }}</span>
-                    </div>
-                    <div class="examination-actions">
-                        <a href="{% url 'secretary_dash:examination_detail' examination.id %}" class="btn btn-info">
-                            <i class="fas fa-eye"></i> View Details
-                        </a>
+            <div class="medical-item">
+                <div class="prescription-header">
+                    <i class="fas fa-notes-medical text-success"></i>
+                    <div class="prescription-title">
+                        <h3>{{ examination.date }}</h3>
+                        <span class="medicine-details">{{ examination.time }}</span>
                     </div>
                 </div>
-                <div class="exam-details">
-                    <div class="exam-item">
-                        <h4><i class="fas fa-notes-medical"></i> Symptoms</h4>
-                        <p>{{ examination.symptoms }}</p>
+                <div class="prescription-details">
+                    <div class="detail-row">
+                        <p><i class="fas fa-heartbeat text-success"></i> <strong>Symptoms:</strong></p>
+                        <span>{{ examination.symptoms }}</span>
                     </div>
-                    <div class="exam-item">
-                        <h4><i class="fas fa-diagnosis"></i> Diagnosis</h4>
-                        <p>{{ examination.diagnosis }}</p>
+                    <div class="detail-row">
+                        <p><i class="fas fa-stethoscope text-success"></i> <strong>Diagnosis:</strong></p>
+                        <span>{{ examination.diagnosis }}</span>
                     </div>
                     {% if examination.prescriptions.all %}
-                    <div class="prescriptions">
-                        <h4><i class="fas fa-prescription"></i> Prescriptions</h4>
-                        <div class="prescriptions-grid">
-                            {% for prescription in examination.prescriptions.all %}
-                            <div class="prescription-card">
-                                <div class="prescription-header">
-                                    <i class="fas fa-pills"></i>
-                                    <h5>{{ prescription.medicine }}</h5>
-                                </div>
-                                <div class="prescription-details">
-                                    <p><i class="fas fa-prescription-bottle"></i> <strong>Dosage:</strong> {{ prescription.dosage }}</p>
-                                    <p><i class="fas fa-clock"></i> <strong>Duration:</strong> {{ prescription.duration }}</p>
-                                    {% if prescription.notes %}
-                                    <p><i class="fas fa-sticky-note"></i> <strong>Notes:</strong> {{ prescription.notes }}</p>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            {% endfor %}
+                    <div class="medicine-info">
+                        <div class="detail-row">
+                            <p><i class="fas fa-prescription text-success"></i> <strong>Prescriptions:</strong></p>
+                            <span>
+                                {% for prescription in examination.prescriptions.all %}
+                                {{ prescription.medicine.name }}{% if not forloop.last %}, {% endif %}
+                                {% endfor %}
+                            </span>
                         </div>
                     </div>
                     {% endif %}
+                </div>
+                <div class="prescription-footer">
+                    <a href="{% url 'secretary_dash:examination_detail' examination.id %}" class="btn btn-info btn-sm">
+                        <i class="fas fa-eye"></i> View Details
+                    </a>
                 </div>
             </div>
             {% endfor %}
@@ -139,58 +134,45 @@
     {% if examination_history %}
     <div class="detail-section">
         <div class="section-header">
-            <i class="fas fa-history"></i>
+            <i class="fas fa-history text-success"></i>
             <h2>Examination History</h2>
         </div>
-        <div class="history-timeline">
+        <div class="medical-details">
             {% for examination in examination_history %}
-            <div class="timeline-item">
-                <div class="timeline-marker"></div>
-                <div class="timeline-content">
-                    <div class="examination-card">
-                        <div class="examination-header">
-                            <div class="examination-date">
-                                <i class="far fa-calendar-alt"></i>
-                                <span>{{ examination.date }}</span>
-                            </div>
-                            <div class="examination-time">
-                                <i class="far fa-clock"></i>
-                                <span>{{ examination.time }}</span>
-                            </div>
-                        </div>
-                        <div class="exam-details">
-                            <div class="exam-item">
-                                <h4><i class="fas fa-notes-medical"></i> Symptoms</h4>
-                                <p>{{ examination.symptoms }}</p>
-                            </div>
-                            <div class="exam-item">
-                                <h4><i class="fas fa-diagnosis"></i> Diagnosis</h4>
-                                <p>{{ examination.diagnosis }}</p>
-                            </div>
-                            {% if examination.prescriptions.all %}
-                            <div class="prescriptions">
-                                <h4><i class="fas fa-prescription"></i> Prescriptions</h4>
-                                <div class="prescriptions-grid">
-                                    {% for prescription in examination.prescriptions.all %}
-                                    <div class="prescription-card">
-                                        <div class="prescription-header">
-                                            <i class="fas fa-pills"></i>
-                                            <h5>{{ prescription.medicine }}</h5>
-                                        </div>
-                                        <div class="prescription-details">
-                                            <p><i class="fas fa-prescription-bottle"></i> <strong>Dosage:</strong> {{ prescription.dosage }}</p>
-                                            <p><i class="fas fa-clock"></i> <strong>Duration:</strong> {{ prescription.duration }}</p>
-                                            {% if prescription.notes %}
-                                            <p><i class="fas fa-sticky-note"></i> <strong>Notes:</strong> {{ prescription.notes }}</p>
-                                            {% endif %}
-                                        </div>
-                                    </div>
-                                    {% endfor %}
-                                </div>
-                            </div>
-                            {% endif %}
+            <div class="medical-item">
+                <div class="prescription-header">
+                    <i class="fas fa-notes-medical text-success"></i>
+                    <div class="prescription-title">
+                        <h3>{{ examination.date }}</h3>
+                        <span class="medicine-details">{{ examination.time }}</span>
+                    </div>
+                </div>
+                <div class="prescription-details">
+                    <div class="detail-row">
+                        <p><i class="fas fa-heartbeat text-success"></i> <strong>Symptoms:</strong></p>
+                        <span>{{ examination.symptoms }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <p><i class="fas fa-stethoscope text-success"></i> <strong>Diagnosis:</strong></p>
+                        <span>{{ examination.diagnosis }}</span>
+                    </div>
+                    {% if examination.prescriptions.all %}
+                    <div class="medicine-info">
+                        <div class="detail-row">
+                            <p><i class="fas fa-prescription text-success"></i> <strong>Prescriptions:</strong></p>
+                            <span>
+                                {% for prescription in examination.prescriptions.all %}
+                                {{ prescription.medicine.name }}{% if not forloop.last %}, {% endif %}
+                                {% endfor %}
+                            </span>
                         </div>
                     </div>
+                    {% endif %}
+                </div>
+                <div class="prescription-footer">
+                    <a href="{% url 'secretary_dash:examination_detail' examination.id %}" class="btn btn-info btn-sm">
+                        <i class="fas fa-eye"></i> View Details
+                    </a>
                 </div>
             </div>
             {% endfor %}
@@ -198,4 +180,83 @@
     </div>
     {% endif %}
 </div>
+
+<style>
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 0.5rem;
+    background: white;
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+}
+
+.detail-row p {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #4a5568;
+    font-size: 0.875rem;
+}
+
+.detail-row span {
+    color: #2d3436;
+    font-size: 0.875rem;
+    text-align: right;
+}
+
+.medical-item {
+    background: #f8fafc;
+    padding: 1.5rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+}
+
+.medical-item h3 {
+    margin: 0 0 1rem 0;
+    font-size: 1.1rem;
+    color: #2d3436;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.prescription-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.prescription-title h3 {
+    margin: 0;
+    padding: 0;
+    border: none;
+}
+
+.prescription-details {
+    background: white;
+    padding: 1rem;
+    border-radius: 6px;
+}
+
+.medicine-info {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px dashed #e2e8f0;
+}
+
+.prescription-footer {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e2e8f0;
+}
+</style>
 {% endblock %} 
