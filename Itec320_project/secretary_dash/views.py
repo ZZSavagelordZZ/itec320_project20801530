@@ -1,3 +1,10 @@
+"""
+Views for the medical secretary dashboard application.
+
+This module contains all the view functions for handling HTTP requests,
+including patient management, appointment scheduling, and medical records.
+"""
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
@@ -25,12 +32,38 @@ import logging
 logger = logging.getLogger(__name__)
 
 def is_secretary(user):
+    """
+    Check if the given user is a secretary.
+    
+    Args:
+        user: The user object to check
+        
+    Returns:
+        bool: True if the user is a secretary, False otherwise
+    """
     return Secretary.objects.filter(user=user).exists()
 
 def is_doctor(user):
+    """
+    Check if the given user is a doctor (superuser).
+    
+    Args:
+        user: The user object to check
+        
+    Returns:
+        bool: True if the user is a doctor, False otherwise
+    """
     return user.is_superuser
 
 def root_redirect(request):
+    """
+    Redirects users to their appropriate dashboard based on their role.
+    
+    Redirects to:
+    - Doctor dashboard for superusers
+    - Secretary dashboard for secretaries
+    - Login page for unauthenticated users
+    """
     if not request.user.is_authenticated:
         return redirect('login')
     
@@ -44,10 +77,19 @@ def root_redirect(request):
 
 @login_required
 def logout_view(request):
+    """
+    Logs out the current user and redirects to the login page.
+    """
     logout(request)
     return redirect('secretary_dash:login')
 
 def login_view(request):
+    """
+    Handles user authentication and login.
+    
+    Validates user credentials and redirects to appropriate dashboard on success.
+    Shows error messages on failed login attempts.
+    """
     if request.user.is_authenticated:
         return redirect('secretary_dash:root')
     
@@ -68,14 +110,28 @@ def login_view(request):
     
     return render(request, 'secretary_dash/login.html', {'form': form})
 
-# Common views for both roles
 def is_staff(user):
-    """Check if user is either a doctor (superuser) or secretary"""
+    """
+    Check if user is either a doctor (superuser) or secretary.
+    
+    Args:
+        user: The user object to check
+        
+    Returns:
+        bool: True if user is staff, False otherwise
+    """
     return user.is_superuser or hasattr(user, 'secretary')
 
 @login_required
 @user_passes_test(is_staff)
 def patient_list(request):
+    """
+    Display a list of all patients in the system.
+    
+    Requires:
+    - User must be logged in
+    - User must be either a doctor or secretary
+    """
     patients = Patient.objects.all().order_by('name')
     return render(request, 'secretary_dash/common/patient_list.html', {
         'patients': patients
@@ -84,6 +140,12 @@ def patient_list(request):
 @login_required
 @user_passes_test(is_staff)
 def patient_create(request):
+    """
+    Handle creation of new patient records.
+    
+    Processes both GET (display form) and POST (save patient) requests.
+    Validates patient information before saving.
+    """
     if request.method == 'POST':
         form = PatientForm(request.POST)
         if form.is_valid():
@@ -101,6 +163,15 @@ def patient_create(request):
 @login_required
 @user_passes_test(is_staff)
 def patient_edit(request, pk):
+    """
+    Handle editing of existing patient records.
+    
+    Args:
+        pk: Primary key of the patient to edit
+        
+    Validates and saves updated patient information.
+    Shows error messages if validation fails.
+    """
     patient = get_object_or_404(Patient, pk=pk)
     if request.method == 'POST':
         form = PatientForm(request.POST, instance=patient)
@@ -119,6 +190,18 @@ def patient_edit(request, pk):
 @login_required
 @user_passes_test(is_staff)
 def patient_detail(request, pk):
+    """
+    Display detailed information about a specific patient.
+    
+    Args:
+        pk: Primary key of the patient to view
+        
+    Shows:
+    - Patient personal information
+    - Recent examinations
+    - Examination history
+    - Upcoming appointments
+    """
     patient = get_object_or_404(Patient, pk=pk)
     
     # Get all examinations ordered by date and time

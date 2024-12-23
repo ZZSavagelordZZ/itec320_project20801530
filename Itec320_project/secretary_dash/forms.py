@@ -1,3 +1,10 @@
+"""
+Forms for the medical secretary dashboard application.
+
+This module contains all the form classes for handling user input,
+including patient registration, appointment scheduling, and medical records.
+"""
+
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
@@ -7,6 +14,12 @@ from django.utils import timezone
 from django.contrib.auth import get_user_model
 
 class PatientForm(forms.ModelForm):
+    """
+    Form for creating and editing patient records.
+    
+    Handles validation and formatting of patient personal information
+    and contact details.
+    """
     class Meta:
         model = Patient
         fields = ['name', 'phone', 'email', 'address', 'date_of_birth']
@@ -16,6 +29,12 @@ class PatientForm(forms.ModelForm):
         }
 
 class AppointmentForm(forms.ModelForm):
+    """
+    Form for scheduling and managing appointments.
+    
+    Includes time slot selection and validation against existing appointments
+    and busy hours.
+    """
     TIME_CHOICES = [
         ('09:00', '9:00 AM'),
         ('09:30', '9:30 AM'),
@@ -45,6 +64,9 @@ class AppointmentForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
+        """
+        Initialize the form and set initial time value for editing.
+        """
         super().__init__(*args, **kwargs)
         if self.instance and self.instance.pk:
             # Format the time value for the form when editing
@@ -52,6 +74,13 @@ class AppointmentForm(forms.ModelForm):
                 self.initial['time'] = self.instance.time.strftime('%H:%M')
 
     def clean(self):
+        """
+        Validate appointment scheduling:
+        - Converts time string to time object
+        - Checks for conflicts with busy hours
+        - Validates against existing appointments
+        - Ensures appointment is within business hours
+        """
         cleaned_data = super().clean()
         date = cleaned_data.get('date')
         time_str = cleaned_data.get('time')
@@ -88,6 +117,11 @@ class AppointmentForm(forms.ModelForm):
         return cleaned_data
 
 class MedicineForm(forms.ModelForm):
+    """
+    Form for adding and editing medicine information.
+    
+    Captures medicine details including description and side effects.
+    """
     class Meta:
         model = Medicine
         fields = ['name', 'description', 'side_effects']
@@ -97,6 +131,11 @@ class MedicineForm(forms.ModelForm):
         }
 
 class ExaminationForm(forms.ModelForm):
+    """
+    Form for recording patient examinations.
+    
+    Handles symptoms, diagnosis, and examination details input.
+    """
     class Meta:
         model = Examination
         fields = ['patient', 'date', 'time', 'symptoms', 'diagnosis']
@@ -108,6 +147,12 @@ class ExaminationForm(forms.ModelForm):
         }
 
 class PrescriptionForm(forms.ModelForm):
+    """
+    Form for creating prescriptions during examinations.
+    
+    Handles medicine selection and prescription details.
+    All fields are optional to allow partial prescriptions.
+    """
     class Meta:
         model = Prescription
         fields = ['medicine', 'dosage', 'duration', 'notes']
@@ -122,6 +167,12 @@ class PrescriptionForm(forms.ModelForm):
             field.required = False
 
 class SecretaryCreationForm(UserCreationForm):
+    """
+    Form for creating and editing secretary accounts.
+    
+    Extends Django's UserCreationForm to include additional
+    secretary-specific fields.
+    """
     phone = forms.CharField(max_length=20)
     email = forms.EmailField(required=True)
     first_name = forms.CharField(max_length=30, required=True)
@@ -132,6 +183,10 @@ class SecretaryCreationForm(UserCreationForm):
         fields = ('email', 'first_name', 'last_name', 'phone', 'password1', 'password2')
 
     def __init__(self, *args, **kwargs):
+        """
+        Initialize the form, removing password fields for existing users
+        and setting initial values.
+        """
         super().__init__(*args, **kwargs)
         if self.instance and self.instance.pk:
             # If we're editing an existing user, remove password fields
@@ -142,6 +197,11 @@ class SecretaryCreationForm(UserCreationForm):
                 self.fields['phone'].initial = self.instance.secretary.phone
 
     def save(self, commit=True):
+        """
+        Save the user and create/update associated secretary profile.
+        
+        Uses email as username and handles secretary profile creation.
+        """
         user = super().save(commit=False)
         user.username = self.cleaned_data['email']  # Use email as username
         user.email = self.cleaned_data['email']
@@ -158,6 +218,12 @@ class SecretaryCreationForm(UserCreationForm):
         return user
 
 class BusyHoursForm(forms.ModelForm):
+    """
+    Form for managing doctor's unavailable time slots.
+    
+    Handles creation and validation of busy hours, ensuring they
+    don't conflict with business hours or existing appointments.
+    """
     class Meta:
         model = BusyHours
         fields = ['date', 'start_time', 'end_time', 'reason']
@@ -169,6 +235,12 @@ class BusyHoursForm(forms.ModelForm):
         }
 
     def clean(self):
+        """
+        Validate busy hours:
+        - Ensures end time is after start time
+        - Validates against business hours
+        - Checks for overlapping busy periods
+        """
         cleaned_data = super().clean()
         date = cleaned_data.get('date')
         start_time = cleaned_data.get('start_time')
@@ -196,10 +268,18 @@ class BusyHoursForm(forms.ModelForm):
                 raise ValidationError('These busy hours overlap with existing busy hours.')
 
 class EmailLoginForm(forms.Form):
+    """
+    Form for handling email-based user authentication.
+    """
     email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email'}))
     password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password'}))
 
     def clean(self):
+        """
+        Validate user credentials:
+        - Checks if email exists
+        - Validates email/password combination
+        """
         cleaned_data = super().clean()
         email = cleaned_data.get('email')
         password = cleaned_data.get('password')
@@ -213,6 +293,9 @@ class EmailLoginForm(forms.Form):
         return cleaned_data
 
 class ForgotPasswordForm(forms.Form):
+    """
+    Form for initiating password reset process.
+    """
     email = forms.EmailField(
         widget=forms.EmailInput(attrs={
             'class': 'form-control',
@@ -221,6 +304,9 @@ class ForgotPasswordForm(forms.Form):
     )
 
     def clean_email(self):
+        """
+        Validate that the email exists in the system.
+        """
         email = self.cleaned_data['email']
         UserModel = get_user_model()
         try:
@@ -230,6 +316,9 @@ class ForgotPasswordForm(forms.Form):
         return email
 
 class SetPasswordForm(forms.Form):
+    """
+    Form for setting a new password during password reset.
+    """
     new_password1 = forms.CharField(
         label='New Password',
         widget=forms.PasswordInput(attrs={

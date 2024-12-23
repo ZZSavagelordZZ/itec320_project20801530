@@ -2510,3 +2510,480 @@ INFO 2024-12-23 20:29:13,455 basehttp 13624 18928 "GET /doctor/secretaries/ HTTP
 INFO 2024-12-23 20:29:14,118 basehttp 13624 18928 "GET /doctor/secretaries/add/ HTTP/1.1" 200 8510
 INFO 2024-12-23 20:29:36,097 basehttp 13624 18928 "POST /doctor/secretaries/add/ HTTP/1.1" 302 0
 INFO 2024-12-23 20:29:36,111 basehttp 13624 18928 "GET /doctor/secretaries/ HTTP/1.1" 200 8175
+INFO 2024-12-23 20:46:06,994 autoreload 13540 17468 Watching for file changes with StatReloader
+INFO 2024-12-23 20:46:08,341 basehttp 13540 8316 "GET / HTTP/1.1" 302 0
+DEBUG 2024-12-23 20:46:08,375 base 13540 8316 Exception while resolving variable 'reason' in template 'secretary_dash/doctor/dashboard.html'.
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 883, in _resolve_lookup
+    current = current[bit]
+              ~~~~~~~^^^^^
+TypeError: 'Appointment' object is not subscriptable
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 893, in _resolve_lookup
+    current = getattr(current, bit)
+              ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Appointment' object has no attribute 'reason'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 899, in _resolve_lookup
+    current = current[int(bit)]
+                      ^^^^^^^^
+ValueError: invalid literal for int() with base 10: 'reason'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 906, in _resolve_lookup
+    raise VariableDoesNotExist(
+django.template.base.VariableDoesNotExist: Failed lookup for key [reason] in <Appointment: Sickly De Santos - 2024-12-23 09:00>
+DEBUG 2024-12-23 20:46:08,375 base 13540 8316 Exception while resolving variable 'reason' in template 'secretary_dash/doctor/dashboard.html'.
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 883, in _resolve_lookup
+    current = current[bit]
+              ~~~~~~~^^^^^
+TypeError: 'Appointment' object is not subscriptable
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 893, in _resolve_lookup
+    current = getattr(current, bit)
+              ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Appointment' object has no attribute 'reason'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 899, in _resolve_lookup
+    current = current[int(bit)]
+                      ^^^^^^^^
+ValueError: invalid literal for int() with base 10: 'reason'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 906, in _resolve_lookup
+    raise VariableDoesNotExist(
+django.template.base.VariableDoesNotExist: Failed lookup for key [reason] in <Appointment: Sickly De Santos - 2024-12-23 09:00>
+DEBUG 2024-12-23 20:46:08,376 base 13540 8316 Exception while resolving variable 'reason' in template 'secretary_dash/doctor/dashboard.html'.
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 883, in _resolve_lookup
+    current = current[bit]
+              ~~~~~~~^^^^^
+TypeError: 'Appointment' object is not subscriptable
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 893, in _resolve_lookup
+    current = getattr(current, bit)
+              ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Appointment' object has no attribute 'reason'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 899, in _resolve_lookup
+    current = current[int(bit)]
+                      ^^^^^^^^
+ValueError: invalid literal for int() with base 10: 'reason'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 906, in _resolve_lookup
+    raise VariableDoesNotExist(
+django.template.base.VariableDoesNotExist: Failed lookup for key [reason] in <Appointment: John doe - 2024-12-23 10:30>
+DEBUG 2024-12-23 20:46:08,376 base 13540 8316 Exception while resolving variable 'reason' in template 'secretary_dash/doctor/dashboard.html'.
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 883, in _resolve_lookup
+    current = current[bit]
+              ~~~~~~~^^^^^
+TypeError: 'Appointment' object is not subscriptable
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 893, in _resolve_lookup
+    current = getattr(current, bit)
+              ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Appointment' object has no attribute 'reason'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 899, in _resolve_lookup
+    current = current[int(bit)]
+                      ^^^^^^^^
+ValueError: invalid literal for int() with base 10: 'reason'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 906, in _resolve_lookup
+    raise VariableDoesNotExist(
+django.template.base.VariableDoesNotExist: Failed lookup for key [reason] in <Appointment: John doe - 2024-12-23 10:30>
+DEBUG 2024-12-23 20:46:08,378 base 13540 8316 Exception while resolving variable 'reason' in template 'secretary_dash/doctor/dashboard.html'.
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 883, in _resolve_lookup
+    current = current[bit]
+              ~~~~~~~^^^^^
+TypeError: 'Appointment' object is not subscriptable
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 893, in _resolve_lookup
+    current = getattr(current, bit)
+              ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Appointment' object has no attribute 'reason'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 899, in _resolve_lookup
+    current = current[int(bit)]
+                      ^^^^^^^^
+ValueError: invalid literal for int() with base 10: 'reason'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 906, in _resolve_lookup
+    raise VariableDoesNotExist(
+django.template.base.VariableDoesNotExist: Failed lookup for key [reason] in <Appointment: psyc D. mann - 2024-12-23 14:00>
+DEBUG 2024-12-23 20:46:08,378 base 13540 8316 Exception while resolving variable 'reason' in template 'secretary_dash/doctor/dashboard.html'.
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 883, in _resolve_lookup
+    current = current[bit]
+              ~~~~~~~^^^^^
+TypeError: 'Appointment' object is not subscriptable
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 893, in _resolve_lookup
+    current = getattr(current, bit)
+              ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Appointment' object has no attribute 'reason'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 899, in _resolve_lookup
+    current = current[int(bit)]
+                      ^^^^^^^^
+ValueError: invalid literal for int() with base 10: 'reason'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 906, in _resolve_lookup
+    raise VariableDoesNotExist(
+django.template.base.VariableDoesNotExist: Failed lookup for key [reason] in <Appointment: psyc D. mann - 2024-12-23 14:00>
+DEBUG 2024-12-23 20:46:08,379 base 13540 8316 Exception while resolving variable 'reason' in template 'secretary_dash/doctor/dashboard.html'.
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 883, in _resolve_lookup
+    current = current[bit]
+              ~~~~~~~^^^^^
+TypeError: 'Appointment' object is not subscriptable
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 893, in _resolve_lookup
+    current = getattr(current, bit)
+              ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Appointment' object has no attribute 'reason'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 899, in _resolve_lookup
+    current = current[int(bit)]
+                      ^^^^^^^^
+ValueError: invalid literal for int() with base 10: 'reason'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 906, in _resolve_lookup
+    raise VariableDoesNotExist(
+django.template.base.VariableDoesNotExist: Failed lookup for key [reason] in <Appointment: Corey V. Depen - 2024-12-23 16:00>
+DEBUG 2024-12-23 20:46:08,379 base 13540 8316 Exception while resolving variable 'reason' in template 'secretary_dash/doctor/dashboard.html'.
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 883, in _resolve_lookup
+    current = current[bit]
+              ~~~~~~~^^^^^
+TypeError: 'Appointment' object is not subscriptable
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 893, in _resolve_lookup
+    current = getattr(current, bit)
+              ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Appointment' object has no attribute 'reason'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 899, in _resolve_lookup
+    current = current[int(bit)]
+                      ^^^^^^^^
+ValueError: invalid literal for int() with base 10: 'reason'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 906, in _resolve_lookup
+    raise VariableDoesNotExist(
+django.template.base.VariableDoesNotExist: Failed lookup for key [reason] in <Appointment: Corey V. Depen - 2024-12-23 16:00>
+INFO 2024-12-23 20:46:08,380 basehttp 13540 8316 "GET /doctor/ HTTP/1.1" 200 32368
+INFO 2024-12-23 20:46:10,044 basehttp 13540 8316 "GET /doctor/secretaries/ HTTP/1.1" 200 7603
+INFO 2024-12-23 20:46:12,393 basehttp 13540 8316 "GET /doctor/secretaries/add/ HTTP/1.1" 200 8510
+INFO 2024-12-23 20:46:16,423 basehttp 13540 8316 "GET /patients/ HTTP/1.1" 200 11564
+INFO 2024-12-23 20:46:17,149 basehttp 13540 8316 "GET /patients/add/ HTTP/1.1" 200 8159
+INFO 2024-12-23 20:46:19,140 basehttp 13540 8316 "GET /medicines/ HTTP/1.1" 200 8526
+INFO 2024-12-23 20:46:19,867 basehttp 13540 8316 "GET /medicines/add/ HTTP/1.1" 200 7581
+INFO 2024-12-23 20:46:23,468 basehttp 13540 8316 "GET /appointments/ HTTP/1.1" 200 11769
+INFO 2024-12-23 20:46:25,019 basehttp 13540 8316 "GET /appointments/add/ HTTP/1.1" 200 8243
+DEBUG 2024-12-23 20:46:27,499 base 13540 8316 Exception while resolving variable 'is_completed' in template 'secretary_dash/doctor/examination_list.html'.
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 883, in _resolve_lookup
+    current = current[bit]
+              ~~~~~~~^^^^^
+TypeError: 'Examination' object is not subscriptable
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 893, in _resolve_lookup
+    current = getattr(current, bit)
+              ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Examination' object has no attribute 'is_completed'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 899, in _resolve_lookup
+    current = current[int(bit)]
+                      ^^^^^^^^
+ValueError: invalid literal for int() with base 10: 'is_completed'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 906, in _resolve_lookup
+    raise VariableDoesNotExist(
+django.template.base.VariableDoesNotExist: Failed lookup for key [is_completed] in <Examination: Examination for psyc D. mann on 2024-12-23>
+DEBUG 2024-12-23 20:46:27,499 base 13540 8316 Exception while resolving variable 'is_completed' in template 'secretary_dash/doctor/examination_list.html'.
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 883, in _resolve_lookup
+    current = current[bit]
+              ~~~~~~~^^^^^
+TypeError: 'Examination' object is not subscriptable
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 893, in _resolve_lookup
+    current = getattr(current, bit)
+              ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Examination' object has no attribute 'is_completed'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 899, in _resolve_lookup
+    current = current[int(bit)]
+                      ^^^^^^^^
+ValueError: invalid literal for int() with base 10: 'is_completed'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 906, in _resolve_lookup
+    raise VariableDoesNotExist(
+django.template.base.VariableDoesNotExist: Failed lookup for key [is_completed] in <Examination: Examination for psyc D. mann on 2024-12-23>
+DEBUG 2024-12-23 20:46:27,504 base 13540 8316 Exception while resolving variable 'is_completed' in template 'secretary_dash/doctor/examination_list.html'.
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 883, in _resolve_lookup
+    current = current[bit]
+              ~~~~~~~^^^^^
+TypeError: 'Examination' object is not subscriptable
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 893, in _resolve_lookup
+    current = getattr(current, bit)
+              ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Examination' object has no attribute 'is_completed'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 899, in _resolve_lookup
+    current = current[int(bit)]
+                      ^^^^^^^^
+ValueError: invalid literal for int() with base 10: 'is_completed'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 906, in _resolve_lookup
+    raise VariableDoesNotExist(
+django.template.base.VariableDoesNotExist: Failed lookup for key [is_completed] in <Examination: Examination for Sickly De Santos on 2024-12-23>
+DEBUG 2024-12-23 20:46:27,504 base 13540 8316 Exception while resolving variable 'is_completed' in template 'secretary_dash/doctor/examination_list.html'.
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 883, in _resolve_lookup
+    current = current[bit]
+              ~~~~~~~^^^^^
+TypeError: 'Examination' object is not subscriptable
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 893, in _resolve_lookup
+    current = getattr(current, bit)
+              ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Examination' object has no attribute 'is_completed'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 899, in _resolve_lookup
+    current = current[int(bit)]
+                      ^^^^^^^^
+ValueError: invalid literal for int() with base 10: 'is_completed'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 906, in _resolve_lookup
+    raise VariableDoesNotExist(
+django.template.base.VariableDoesNotExist: Failed lookup for key [is_completed] in <Examination: Examination for Sickly De Santos on 2024-12-23>
+DEBUG 2024-12-23 20:46:27,510 base 13540 8316 Exception while resolving variable 'is_completed' in template 'secretary_dash/doctor/examination_list.html'.
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 883, in _resolve_lookup
+    current = current[bit]
+              ~~~~~~~^^^^^
+TypeError: 'Examination' object is not subscriptable
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 893, in _resolve_lookup
+    current = getattr(current, bit)
+              ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Examination' object has no attribute 'is_completed'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 899, in _resolve_lookup
+    current = current[int(bit)]
+                      ^^^^^^^^
+ValueError: invalid literal for int() with base 10: 'is_completed'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 906, in _resolve_lookup
+    raise VariableDoesNotExist(
+django.template.base.VariableDoesNotExist: Failed lookup for key [is_completed] in <Examination: Examination for John doe on 2024-12-23>
+DEBUG 2024-12-23 20:46:27,510 base 13540 8316 Exception while resolving variable 'is_completed' in template 'secretary_dash/doctor/examination_list.html'.
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 883, in _resolve_lookup
+    current = current[bit]
+              ~~~~~~~^^^^^
+TypeError: 'Examination' object is not subscriptable
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 893, in _resolve_lookup
+    current = getattr(current, bit)
+              ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Examination' object has no attribute 'is_completed'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 899, in _resolve_lookup
+    current = current[int(bit)]
+                      ^^^^^^^^
+ValueError: invalid literal for int() with base 10: 'is_completed'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 906, in _resolve_lookup
+    raise VariableDoesNotExist(
+django.template.base.VariableDoesNotExist: Failed lookup for key [is_completed] in <Examination: Examination for John doe on 2024-12-23>
+DEBUG 2024-12-23 20:46:27,515 base 13540 8316 Exception while resolving variable 'is_completed' in template 'secretary_dash/doctor/examination_list.html'.
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 883, in _resolve_lookup
+    current = current[bit]
+              ~~~~~~~^^^^^
+TypeError: 'Examination' object is not subscriptable
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 893, in _resolve_lookup
+    current = getattr(current, bit)
+              ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Examination' object has no attribute 'is_completed'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 899, in _resolve_lookup
+    current = current[int(bit)]
+                      ^^^^^^^^
+ValueError: invalid literal for int() with base 10: 'is_completed'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 906, in _resolve_lookup
+    raise VariableDoesNotExist(
+django.template.base.VariableDoesNotExist: Failed lookup for key [is_completed] in <Examination: Examination for psyc D. mann on 2024-12-22>
+DEBUG 2024-12-23 20:46:27,515 base 13540 8316 Exception while resolving variable 'is_completed' in template 'secretary_dash/doctor/examination_list.html'.
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 883, in _resolve_lookup
+    current = current[bit]
+              ~~~~~~~^^^^^
+TypeError: 'Examination' object is not subscriptable
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 893, in _resolve_lookup
+    current = getattr(current, bit)
+              ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Examination' object has no attribute 'is_completed'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 899, in _resolve_lookup
+    current = current[int(bit)]
+                      ^^^^^^^^
+ValueError: invalid literal for int() with base 10: 'is_completed'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python312\Lib\site-packages\django\template\base.py", line 906, in _resolve_lookup
+    raise VariableDoesNotExist(
+django.template.base.VariableDoesNotExist: Failed lookup for key [is_completed] in <Examination: Examination for psyc D. mann on 2024-12-22>
+INFO 2024-12-23 20:46:27,518 basehttp 13540 8316 "GET /examinations/ HTTP/1.1" 200 11698
+INFO 2024-12-23 20:46:28,370 basehttp 13540 8316 "GET /examinations/add/ HTTP/1.1" 200 12854
