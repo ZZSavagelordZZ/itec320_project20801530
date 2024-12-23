@@ -1,0 +1,1 @@
+Create a superuser to become a doctor and then you will gain access to the doctor dashboard where you can create secretaries and everything else is self explanatory. make sure to use real emails so that you get the secretary login sent to the secretary which is how they gain access and they may choose to reset their password too.
