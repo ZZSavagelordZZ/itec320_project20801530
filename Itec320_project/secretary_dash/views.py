@@ -348,8 +348,52 @@ def secretary_create(request):
     if request.method == 'POST':
         form = SecretaryCreationForm(request.POST)
         if form.is_valid():
-            form.save()
-            messages.success(request, 'Secretary created successfully!')
+            # Get the raw password before it's hashed
+            raw_password = form.cleaned_data['password1']
+            user = form.save()
+
+            try:
+                # Generate password reset token
+                uid = urlsafe_base64_encode(force_bytes(user.pk))
+                token = password_reset_token.make_token(user)
+                
+                # Build reset URL
+                reset_url = request.build_absolute_uri(f'/reset-password/{uid}/{token}/')
+                
+                # Create email content
+                subject = 'Welcome to Medical Management System'
+                message = render_to_string('secretary_dash/email/secretary_welcome.html', {
+                    'user': user,
+                    'password': raw_password,
+                    'reset_url': reset_url,
+                })
+                
+                # Send the email
+                send_mail(
+                    subject,
+                    '',  # Empty string for plain text version
+                    settings.EMAIL_HOST_USER,
+                    [user.email],
+                    fail_silently=False,
+                    html_message=message
+                )
+                
+                messages.success(request, mark_safe(
+                    '<div class="message-content">'
+                    '<h4>Secretary Created Successfully</h4>'
+                    '<p>The secretary account has been created and login credentials have been sent to their email address.</p>'
+                    '</div>'
+                ))
+            except Exception as e:
+                logger.error(f"Failed to send welcome email: {str(e)}")
+                messages.success(request, mark_safe(
+                    '<div class="message-content">'
+                    '<h4>Secretary Created Successfully</h4>'
+                    '<p>The secretary account has been created, but we could not send the welcome email. '
+                    'Please provide them with their login credentials manually.</p>'
+                    '</div>'
+                ))
+            
             return redirect('secretary_dash:secretary_list')
     else:
         form = SecretaryCreationForm()

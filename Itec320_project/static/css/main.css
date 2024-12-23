@@ -189,8 +189,8 @@ body {
 
 /* Quick Actions */
 .quick-actions {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(18.75rem, 1fr));
+    display: flex;
+    flex-direction: row;
     gap: 1.5rem;
     margin-top: 1rem;
 }

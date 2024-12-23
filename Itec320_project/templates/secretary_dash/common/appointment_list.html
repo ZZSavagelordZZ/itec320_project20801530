@@ -34,10 +34,12 @@
                     </td>
                     <td class="actions">
                         {% if appointment.status == 'upcoming' %}
+                            {% if request.user.is_superuser %}
                             <a href="{% url 'secretary_dash:examination_create' %}?appointment={{ appointment.id }}" class="btn btn-primary btn-sm">
                                 <i class="fas fa-stethoscope"></i>
                                 <span>Exam</span>
                             </a>
+                            {% endif %}
                             <a href="{% url 'secretary_dash:appointment_edit' appointment.id %}" class="btn btn-edit btn-sm">
                                 <i class="fas fa-edit"></i>
                                 <span>Edit</span>
